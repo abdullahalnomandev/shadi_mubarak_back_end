@@ -12,7 +12,6 @@ const main = async () => {
         console.log(`app listening on port ${port}`)
       })
       
-  
     } catch (err) {
       console.log("Failed to connect database ",err);
     }
