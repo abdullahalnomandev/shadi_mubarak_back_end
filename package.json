@@ -4,6 +4,7 @@
   "description": "This is shadi mumbarak app . This app used for online marriage ",
   "main": "src/server.ts",
   "scripts": {
+    "start": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Abdullah Al Noman",
@@ -11,7 +12,11 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.12.1",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.2"
   }
 }
