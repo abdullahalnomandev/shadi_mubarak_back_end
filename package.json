@@ -1,0 +1,17 @@
+{
+  "name": "shadi_mubarak_backend",
+  "version": "1.0.0",
+  "description": "This is shadi mumbarak app . This app used for online marriage ",
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdullah Al Noman",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1",
+    "typescript": "^5.8.2"
+  }
+}
