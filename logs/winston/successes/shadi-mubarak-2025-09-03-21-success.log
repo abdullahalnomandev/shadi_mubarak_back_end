@@ -46,3 +46,27 @@
   label: 'Shadi Mubarak',
   timestamp: '2025-03-09T15:29:06.603Z'
 }
+{
+  message: 'Database connection successful',
+  level: 'info',
+  label: 'Shadi Mubarak',
+  timestamp: '2025-03-09T15:51:19.698Z'
+}
+{
+  message: 'app listening on port 5000',
+  level: 'info',
+  label: 'Shadi Mubarak',
+  timestamp: '2025-03-09T15:51:19.730Z'
+}
+{
+  message: 'Database connection successful',
+  level: 'info',
+  label: 'Shadi Mubarak',
+  timestamp: '2025-03-09T15:51:36.765Z'
+}
+{
+  message: 'app listening on port 5000',
+  level: 'info',
+  label: 'Shadi Mubarak',
+  timestamp: '2025-03-09T15:51:36.782Z'
+}
