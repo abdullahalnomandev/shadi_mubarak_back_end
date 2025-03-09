@@ -1,7 +1,6 @@
-
 export type IUser = {
-  id: string
-  role: string
-  password: string
-  email: string
+  id: string;
+  role: string;
+  password: string;
+  email: string;
 }
