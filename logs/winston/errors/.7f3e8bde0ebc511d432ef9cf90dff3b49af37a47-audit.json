@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\.7f3e8bde0ebc511d432ef9cf90dff3b49af37a47-audit.json",
+    "files": [
+        {
+            "date": 1741533912614,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-09-03-21-error.log",
+            "hash": "1515714c9c34869cbf92d933fb1a1bcf15ec37ba7187796cb930251fcb1a7c0d"
+        }
+    ],
+    "hashType": "sha256"
+}
