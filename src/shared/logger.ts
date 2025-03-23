@@ -19,7 +19,7 @@ const logger = createLogger({
     label({ label: 'Shadi Mubarak' }),
     timestamp(),
     myFormat,
-    prettyPrint()
+    // prettyPrint()
   ),
   transports: [
     new transports.Console(),
