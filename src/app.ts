@@ -1,4 +1,4 @@
-import express, { Application, NextFunction } from 'express'
+import express, { Application } from 'express'
 import cors from 'cors';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import { UserRoutes } from './app/modules/users/user.route';
@@ -17,9 +17,9 @@ app.use('/api/v1/users',UserRoutes);
 
 
 //Testing
-app.get('/',  (req: Request, res: Response,next:NextFunction) => {
-   throw new Error("Not implemented")
-})
+// app.get('/',  (req: Request, res: Response,next:NextFunction) => {
+//    throw new Error("Not implemented")
+// })
 
  // global error handler
  app.use(globalErrorHandler)
