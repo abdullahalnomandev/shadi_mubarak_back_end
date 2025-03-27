@@ -1,14 +1,22 @@
-import { Model } from "mongoose";
+/* eslint-disable no-unused-vars */
+import { Model } from 'mongoose';
 
 export type IUser = {
   id: string;
   role: string;
   password: string;
   email: string;
-}
+};
 
-export type UserModel = Model<IUser, object>;
+export type IUserMethods = {
+  isUserExist(id: string): Promise<Partial<IUser> | null>;
+  isPasswordMatch(
+    givenPassword: string,
+    savePassword: string
+  ): Promise<boolean>;
+};
+export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>;
 
-export type IUserFilters =  {
-  searchTerm?:string;
-}
+export type IUserFilters = {
+  searchTerm?: string;
+};

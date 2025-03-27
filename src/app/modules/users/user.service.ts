@@ -8,8 +8,12 @@ import { paginationHelper } from '../../../helpers/paginationHelper';
 import { SortOrder } from 'mongoose';
 import { userSearchableFields } from './user.constant';
 
+
 const createUser = async (user: IUser): Promise<IUser | null> => {
+
+  // user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_round));
   const createUser = await User.create(user);
+
   if (!createUser) {
     throw new ApiError(400, 'Failed to create user');
   }
@@ -74,9 +78,19 @@ const getUserById = async (id: string):Promise<IUser | null> => {
   const result = await User.findById(id);
   return result;
 }
+const updateUserById = async (id: string, payload: Partial<IUser>):Promise<IUser | null> => {
+  return await User.findOneAndUpdate({_id:id}, payload,{new:true});
+
+}
+
+const deleteUserById = async (id: string):Promise<IUser | null> => {
+  return await User.findByIdAndDelete(id);
+}
 
 export const UserService = {
   createUser,
   getAllUsers,
-  getUserById
+  getUserById,
+  updateUserById,
+  deleteUserById
 };

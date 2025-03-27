@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, Request } from 'express';
 import { UserService } from './user.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -8,7 +8,7 @@ import { paginationFields } from '../../../constants/pagination';
 import { IUser } from './user.interface';
 import { userFilterableFields } from './user.constant';
 
-const createUser = catchAsync(async (req:Request,res:Response,next: NextFunction) => {
+const createUser = catchAsync(async (req:Request,res:Response) => {
 
   const { user } = req.body;
   const result = await UserService.createUser(user);
@@ -19,11 +19,9 @@ const createUser = catchAsync(async (req:Request,res:Response,next: NextFunction
     message: 'User created successfully',
     data: result
   });
-
-  next();
 })
 
-const getAllUsers = catchAsync(async (req:Request, res:Response,next:NextFunction) => {
+const getAllUsers = catchAsync(async (req:Request, res:Response) => {
   const filters = pick(req.query,userFilterableFields)
   const patinationOptions = pick(req.query, paginationFields)
    const result = await UserService.getAllUsers(filters, patinationOptions);
@@ -35,12 +33,13 @@ const getAllUsers = catchAsync(async (req:Request, res:Response,next:NextFunctio
     meta:result.meta,
     data: result.data
   });
-  next();
 
 })
-const getSingleUser = catchAsync(async (req:Request, res:Response,next:NextFunction) => {
+const getSingleUser = catchAsync(async (req:Request, res:Response) => {
  
-    const {id} = req.params; 
+  console.log('cookie update',req.cookies)
+
+   const {id} = req.params; 
    const result = await UserService.getUserById(id);
    
   sendResponse<IUser>(res,{
@@ -49,12 +48,42 @@ const getSingleUser = catchAsync(async (req:Request, res:Response,next:NextFunct
     message: 'user retrieved successfully',
     data: result
   });
-  next();
+
+})
+
+const updateUser = catchAsync(async (req:Request, res:Response) => {
+ 
+    const {id} = req.params; 
+    const updateData = req.body;
+    const result = await UserService.updateUserById(id, updateData);
+   
+  sendResponse<IUser>(res,{
+    statusCode:httpStatus.OK,
+    status:'success',
+    message: 'user updated successfully',
+    data: result
+  });
+
+});
+
+const deleteUser = catchAsync(async (req:Request, res:Response) => {
+ 
+    const {id} = req.params; 
+    const result = await UserService.deleteUserById(id);
+   
+  sendResponse<IUser>(res,{
+    statusCode:httpStatus.OK,
+    status:'success',
+    message: 'User deleted successfully',
+    data: result
+  });
 
 })
 
 export const UserController = {
   createUser,
   getAllUsers,
-  getSingleUser
+  getSingleUser,
+  updateUser,
+  deleteUser
 };
