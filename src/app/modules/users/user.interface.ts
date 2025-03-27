@@ -8,3 +8,7 @@ export type IUser = {
 }
 
 export type UserModel = Model<IUser, object>;
+
+export type IUserFilters =  {
+  searchTerm?:string;
+}
