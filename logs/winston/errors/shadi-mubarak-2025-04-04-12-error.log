@@ -1,0 +1,33 @@
+{
+  statusCode: 404,
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:51:28.845Z'
+}
+{
+  statusCode: 404,
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:52:22.763Z'
+}
+{
+  statusCode: 404,
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:54:14.116Z'
+}
+{
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:56:14.596Z'
+}
+{
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:57:37.181Z'
+}
+{
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T06:58:19.942Z'
+}

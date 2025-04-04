@@ -3,11 +3,10 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 import { Authservice } from './auth.service';
-import { ILoginUserResponse } from './auth.interface';
+import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 import config from '../../../config';
 
 const loginUser = catchAsync(async (req:Request,res:Response) => {
-
   const { ...loginData } = req.body;
   const result = await Authservice.loginUser(loginData);
   const {refreshToken, ...others} = result;
@@ -18,8 +17,6 @@ const loginUser = catchAsync(async (req:Request,res:Response) => {
   }
 
   res.cookie('refreshToken',refreshToken, cookieOptions);
-
-
   sendResponse<ILoginUserResponse>(res,{
     statusCode: httpStatus.OK,
     status:'success',
@@ -42,7 +39,7 @@ const refreshToken = catchAsync(async (req:Request,res:Response) => {
   res.cookie('refreshToken',refreshToken, cookieOptions);
 
 
-  sendResponse<ILoginUserResponse>(res,{
+  sendResponse<IRefreshTokenResponse>(res,{
     statusCode: httpStatus.OK,
     status:'success',
     message:"User logged in successfully!",

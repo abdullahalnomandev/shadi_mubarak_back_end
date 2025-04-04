@@ -1,0 +1,12 @@
+{
+  statusCode: 500,
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T10:20:00.967Z'
+}
+{
+  statusCode: 404,
+  level: 'error',
+  label: 'Shadi Mubarak!',
+  timestamp: '2025-04-04T10:24:16.105Z'
+}

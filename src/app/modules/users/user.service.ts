@@ -10,8 +10,13 @@ import { userSearchableFields } from './user.constant';
 
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
+  // Check if user already exists with the same email
+  const existingUser = await User.findOne({ email: user.email });
+  if (existingUser) {
+    // throw new ApiError(400, 'User already exists with this email');
+    throw new ApiError(500,'User already exists with this email');
+  }
 
-  // user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_round));
   const createUser = await User.create(user);
 
   if (!createUser) {
@@ -51,8 +56,7 @@ const getAllUsers = async (
   }
 
   // Extract pagination details
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelper(paginationOptions);
+  const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
 
   // Construct sorting conditions
   const sortConditions: { [key: string]: SortOrder } = {};

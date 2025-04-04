@@ -9,6 +9,11 @@ const createToken = (
     return jwt.sign(payload, secret, options);
 };
 
+const verifiedToken = (token: string, secret: jwt.Secret): jwt.JwtPayload => {
+    return jwt.verify(token, secret) as jwt.JwtPayload;
+};
+
 export const jwtHelpers = {
-    createToken
+    createToken,
+    verifiedToken
 };
