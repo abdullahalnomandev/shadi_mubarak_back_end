@@ -1,16 +1,30 @@
 import { NextFunction, Request, Response } from 'express';
-const auth = (...requireRoles:string[]) => async (req:Request, res:Response, next:NextFunction) => 
+import ApiError from '../../errors/ApiError';
+import httpStatus from 'http-status';
+import { jwtHelpers } from '../../helpers/jwtHelpers';
+import config from '../../config';
+import { Secret } from 'jsonwebtoken';
 
-{
-    const {role} = req.body;
+const auth = (...requireRoles:string[]) => async (req:Request, res:Response, next:NextFunction) => {
     
-    if(!requireRoles.includes(role)){
-        return res.status(403).json({
-            success:false,
-            message:"Forbidden"
-        })
+    let verifiedUser = null;
+    try {
+        const authHeader = req.headers.authorization;
+        const token = authHeader ? authHeader.split(' ')[1] : null;
+            
+        if(!token) throw new ApiError(httpStatus.UNAUTHORIZED,"Your are not authorized");
+        // verify token
+        verifiedUser = jwtHelpers.verifiedToken(token,config.jwt.secret as Secret);
+        req.user = verifiedUser ;
+
+        // guard
+        if(requireRoles.length && !requireRoles.includes(verifiedUser.role)){
+            throw new ApiError(httpStatus.FORBIDDEN,"Forbidden")
+        }
+        next();
+    } catch (error) {
+        next(error);
     }
-    next();
 }
 
 export default auth;

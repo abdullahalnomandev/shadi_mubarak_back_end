@@ -12,7 +12,6 @@ const createUser = catchAsync(async (req:Request,res:Response) => {
 
   const { user } = req.body;
   const result = await UserService.createUser(user);
-
   sendResponse<IUser>(res,{
     statusCode:httpStatus.OK,
     status:'success',
@@ -25,7 +24,7 @@ const getAllUsers = catchAsync(async (req:Request, res:Response) => {
   const filters = pick(req.query,userFilterableFields)
   const patinationOptions = pick(req.query, paginationFields)
    const result = await UserService.getAllUsers(filters, patinationOptions);
-   
+
   sendResponse<IUser[]>(res,{
     statusCode:httpStatus.OK,
     status:'success',

@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../../config';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 
 const UserSchema = new Schema<IUser,UserModel>(
   {
@@ -10,8 +11,14 @@ const UserSchema = new Schema<IUser,UserModel>(
     email: { type: String, required: [true, 'email is required'] },
     password: {
       type: String,
+      select: 0,
       required: [true, 'password is required to create user'],
     },
+    role: {
+      type: String,
+      enum: [ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN,ENUM_USER_ROLE.SUPER_ADMIN],
+      required: [true, 'role is required to create user'],
+    }
   },
   {
     timestamps: true,
@@ -29,9 +36,10 @@ UserSchema.static('isPasswordMatch', async function (givenPassword:string,savePa
   return  await bcrypt.compare(givenPassword,savePassword);
 })
 
+// hashing password
 UserSchema.pre('save', async function (next) {
     const user = this
-    user.password = await bcrypt.hash(
+    user.password = await bcrypt.hashSync(
       user.password,
       Number(config.bcrypt_salt_round)
     );

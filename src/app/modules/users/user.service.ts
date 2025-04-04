@@ -36,7 +36,6 @@ const getAllUsers = async (
 ): Promise<IGenericResponse<IUser[]>> => {
   const { searchTerm, ...filtersData } = filters;
   const andConditions = [];
-
   // Handle search term filtering
   if (searchTerm) {
     andConditions.push({

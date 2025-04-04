@@ -15,7 +15,6 @@ const loginUser = catchAsync(async (req:Request,res:Response) => {
     secure: config.env === "production",
     httpOnly:true
   }
-
   res.cookie('refreshToken',refreshToken, cookieOptions);
   sendResponse<ILoginUserResponse>(res,{
     statusCode: httpStatus.OK,
@@ -37,8 +36,6 @@ const refreshToken = catchAsync(async (req:Request,res:Response) => {
   }
 
   res.cookie('refreshToken',refreshToken, cookieOptions);
-
-
   sendResponse<IRefreshTokenResponse>(res,{
     statusCode: httpStatus.OK,
     status:'success',
@@ -47,8 +44,22 @@ const refreshToken = catchAsync(async (req:Request,res:Response) => {
   })
 })
 
+const changePassword = catchAsync(async (req:Request,res:Response) => {
+
+  const {...passwordData} = req.body;
+  const user = req.user;
+   await Authservice.changePassword(user,passwordData);
+
+  sendResponse<ILoginUserResponse>(res,{
+    statusCode: httpStatus.OK,
+    status:'success',
+    message:"Password updated successfully !",
+
+  })
+})
 
 export const AuthController = {
     loginUser,
-    refreshToken
+    refreshToken,
+    changePassword
 };
