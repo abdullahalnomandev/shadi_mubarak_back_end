@@ -23,7 +23,6 @@ const loginUser = catchAsync(async (req:Request,res:Response) => {
     data: others
   })
 })
-
 const refreshToken = catchAsync(async (req:Request,res:Response) => {
 
   const { refreshToken } = req.cookies;
@@ -57,7 +56,6 @@ const changePassword = catchAsync(async (req:Request,res:Response) => {
 
   })
 })
-
 export const AuthController = {
     loginUser,
     refreshToken,
