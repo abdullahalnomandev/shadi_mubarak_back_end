@@ -7,8 +7,8 @@ import { ENUM_USER_ROLE } from '../../../enums/user';
 
 const UserSchema = new Schema<IUser,UserModel>(
   {
-    id: { type: String, required: [true, 'ID is required'] },
-    email: { type: String, required: [true, 'email is required'] },
+    bioDataNo: { type: String, unique:true, required: true },
+    email: { type: String, unique:true, required: [true, 'email is required'] },
     password: {
       type: String,
       select: 0,
@@ -18,7 +18,8 @@ const UserSchema = new Schema<IUser,UserModel>(
       type: String,
       enum: [ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN,ENUM_USER_ROLE.SUPER_ADMIN],
       required: [true, 'role is required to create user'],
-    }
+    },
+    profileImage: { required:false, type: String },
   },
   {
     timestamps: true,
@@ -28,7 +29,7 @@ const UserSchema = new Schema<IUser,UserModel>(
   }
 );
 
-UserSchema.static('isUserExist', async function (email:string):Promise<Pick<IUser,"email" | "password" | "id" | "role"> | null>{
+UserSchema.static('isUserExist', async function (email:string):Promise<Pick<IUser,"email" | "password" | "bioDataNo" | "role"> | null>{
   return await User.findOne({email},{email:1,password:1,role:1,id:1});
 })
 

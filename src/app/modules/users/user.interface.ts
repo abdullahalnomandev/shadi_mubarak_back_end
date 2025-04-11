@@ -2,10 +2,11 @@
 import { Model } from 'mongoose';
 
 export type IUser = {
-  id: string;
+  bioDataNo: string;
+  email:string;
   role: string;
   password: string;
-  email: string;
+  profileImage:string;
 };
 
 // export type IUserMethods = {
@@ -17,7 +18,7 @@ export type IUser = {
 // };
 
 export type UserModel = {
-  isUserExist(email:string): Promise<Pick<IUser,"email" | "password" | "id" |"role">>;
+  isUserExist(email:string): Promise<Pick<IUser,"email" | "password"|"role" | "bioDataNo">>;
   isPasswordMatch(givenPassword:string,savePassword:string): Promise<boolean>;
 } & Model<IUser>;
 

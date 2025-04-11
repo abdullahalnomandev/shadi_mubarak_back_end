@@ -11,7 +11,7 @@ import { userSearchableFields } from './user.constant';
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   // Check if user already exists with the same email
-  const existingUser = await User.findOne({ email: user.email });
+  const existingUser = await User.findOne({ bioDataNo:user.bioDataNo });
   if (existingUser) {
     // throw new ApiError(400, 'User already exists with this email');
     throw new ApiError(500,'User already exists with this email');
@@ -23,9 +23,9 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
     throw new ApiError(400, 'Failed to create user');
   }
 
-  if (!user.id) {
+  if (!user.bioDataNo) {
     const id = await generateUserId();
-    user.id = id;
+    user.bioDataNo = id;
   }
   return createUser;
 };
