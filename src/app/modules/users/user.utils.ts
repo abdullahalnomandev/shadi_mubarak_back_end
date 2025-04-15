@@ -1,22 +1,24 @@
-import { User } from "./user.model";
+import { User } from './user.model';
 
+export const findLastUserId = async (): Promise<string | undefined> => {
+  const lastUser = await User.findOne({}, { bioDataNo: 1, _id: 0 })
+    .sort({ createdAt: -1 }) 
+    .lean();
 
+  return lastUser?.bioDataNo;
+};
 
-export const findLastUserId = async () => {
+export const generateUserId = async (): Promise<string> => {
+  const lastId = await findLastUserId(); 
 
-  const lastUser = await User.findOne({},{id:1,_id:0}).sort({
-    createAt:-1,
-  }).lean();
+  let numericPart = 0;
 
-  return lastUser?.id;
-}
+  if (lastId) {
+    numericPart = parseInt(lastId.replace('SM-', '')) || 0;
+  }
 
-export const generateUserId = async () => {
-    const currentId =  await findLastUserId() || (0).toString().padStart(5,'0');
-    
+  const newIdNumber = numericPart + 1;
+  const newId = `SM-${newIdNumber.toString().padStart(3, '0')}`; 
 
-    const incrementId = currentId + 1;
-
-    return incrementId;
-
-}
+  return newId;
+};

@@ -17,10 +17,11 @@ const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse> => {
   if (isUserExist.password && !await User.isPasswordMatch(password, isUserExist.password))
      throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect!');
 
-  const {id,role} = isUserExist;
+  const { id, bioDataNo, role } = isUserExist;
   //create access token
   const accessToken = jwtHelpers.createToken({
     id,
+    bioDataNo,
     email,
     role 
   },config.jwt.secret as Secret,  config.jwt.expires_in as string)
@@ -28,6 +29,7 @@ const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse> => {
   //create refresh token
   const refreshToken = jwtHelpers.createToken({
     id,
+    bioDataNo,
     email,
     role 
   },config.jwt.refresh_secret as Secret,  config.jwt.refresh_expires_in as string)
@@ -60,7 +62,7 @@ const refreshToken = async (token:string):Promise<IRefreshTokenResponse> =>{
 
  // generate new token
  const newAccessToken = jwtHelpers.createToken(
-   { id: isUserExist.id, role: isUserExist.role },
+   { id: isUserExist.bioDataNo, role: isUserExist.role },
    config.jwt.secret as Secret,
    config.jwt.expires_in as string
  );

@@ -12,13 +12,17 @@ const createUser = catchAsync(async (req:Request,res:Response) => {
 
   const { user } = req.body;
   const result = await UserService.createUser(user);
-  sendResponse<IUser>(res,{
-    statusCode:httpStatus.OK,
-    status:'success',
+  
+  // eslint-disable-next-line no-unused-vars
+  const { password, ...safeUser } = result.toObject(); // `toObject()` if it's a Mongoose doc
+
+  sendResponse<Partial<IUser>>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
     message: 'User created successfully',
-    data: result
+    data: safeUser,
   });
-})
+});
 
 const getAllUsers = catchAsync(async (req:Request, res:Response) => {
   const filters = pick(req.query,userFilterableFields)
