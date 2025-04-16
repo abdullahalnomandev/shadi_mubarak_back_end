@@ -3,72 +3,138 @@ import { SortOrder } from 'mongoose';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IUserFilters } from '../users/user.interface';
-import { userSearchableFields } from '../users/user.constant';
 import { IBiodata } from './biodata.interface';
 import { BioData } from './biodata.model';
+import { bioDataSearchableFields } from './biodata.constant';
+
+
+// const getALlBioData = async (
+//   filters: IUserFilters,
+//   paginationOptions: IPaginationOptions
+// ): Promise<IGenericResponse<IBiodata[]>> => {
+//   const { searchTerm, ...filtersData } = filters;
+//   const andConditions = [];
+
+//   // Handle search term filtering
+//   if (searchTerm) {
+//     andConditions.push({
+//       $or: bioDataSearchableFields.map(field => ({
+//         [field]: { $regex: searchTerm, $options: 'i' },
+//       })),
+//     });
+//   }
+
+//   // Handle additional filters
+//   if (Object.keys(filtersData).length > 0) {
+//     andConditions.push({
+//       $and: Object.entries(filtersData).map(([field, value]) => ({
+//         [field]: value,
+//       })),
+//     });
+//   }
+
+//   // Extract pagination details
+//   const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
+
+//   // Construct sorting conditions
+//   const sortConditions: { [key: string]: SortOrder } = {};
+//   if (sortBy && sortOrder) {
+//     sortConditions[sortBy] = sortOrder;
+//   }
+
+//   // Query users with filters, sorting, and pagination
+//   const whereCondition = andConditions.length ? { $and: andConditions } : {};
+//   const usersBioData = await BioData.find(
+//     whereCondition,
+//     {
+//       bioDataNo: 1,
+//       view: 1,
+//       'generalInformation.gender': 1,
+//       'generalInformation.dateOfBirth': 1,
+//       'generalInformation.height': 1,
+//       'generalInformation.skin': 1,
+//       _id: 0,
+//     }
+//   )
+//     .sort(sortConditions)
+//     .skip(skip)
+//     .limit(limit)
+//     .lean()
+//     .exec();
+
+//   return {
+//     meta: {
+//       page,
+//       limit,
+//       total: usersBioData?.length,
+//     },
+//     data: usersBioData,
+//   };
+// };
 
 const getALlBioData = async (
-    filters: IUserFilters,
-    paginationOptions: IPaginationOptions
-  ): Promise<IGenericResponse<IBiodata[]>> => {
-    const { searchTerm, ...filtersData } = filters;
-    const andConditions = [];
-    // Handle search term filtering
-    if (searchTerm) {
-      andConditions.push({
-        $or: userSearchableFields.map(field => ({
-          [field]: { $regex: searchTerm, $options: 'i' },
-        })),
-      });
+  filters: IUserFilters,
+  paginationOptions: IPaginationOptions
+): Promise<IGenericResponse<IBiodata[]>> => {
+  const { searchTerm, ...otherFilters } = filters;
+
+  // 1) Build the base filter object
+  const query: Record<string, unknown> = {};
+
+  // 1a) Text‐search across multiple fields
+  if (searchTerm) {
+    query.$or = bioDataSearchableFields.map(field => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    }));
+  }
+
+  // 1b) Exact‐match filters
+  for (const [key, value] of Object.entries(otherFilters)) {
+    if (value !== undefined && value !== null && value !== '') {
+      query[key] = value;
     }
-  
-    // Handle additional filters
-    if (Object.keys(filtersData).length > 0) {
-      andConditions.push({
-        $and: Object.entries(filtersData).map(([field, value]) => ({
-          [field]: value,
-        })),
-      });
-    }
-  
-    // Extract pagination details
-    const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
-  
-    // Construct sorting conditions
-    const sortConditions: { [key: string]: SortOrder } = {};
-    if (sortBy && sortOrder) {
-      sortConditions[sortBy] = sortOrder;
-    }
-  
-  
-    // Query users with filters, sorting, and pagination
-    const whereCondition = andConditions.length ? { $and: andConditions } : {};
-    const usersBioData = await BioData.find(
-      whereCondition,
-      {
-         bioDataNo: 1,
-          view: 1,
-          "generalInformation.gender":1,
-          "generalInformation.dateOfBirth":1,
-           "generalInformation.height":1, 
-           "generalInformation.skin":1, 
-           _id: 0 } 
-    ) .sort(sortConditions)
+  }
+
+  // 2) Extract pagination & sorting
+  const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
+
+  const sortCondition: Record<string, SortOrder> = {};
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  // 3) Define projection once
+  const projection = {
+    _id: 0,
+    bioDataNo: 1,
+    view: 1,
+    'generalInformation.gender': 1,
+    'generalInformation.dateOfBirth': 1,
+    'generalInformation.height': 1,
+    'generalInformation.skin': 1,
+  };
+
+  // 4) Run count and find in parallel
+  const [totalCount, data] = await Promise.all([
+    BioData.countDocuments(query),
+    BioData.find(query, projection)
+      .sort(sortCondition)
       .skip(skip)
       .limit(limit)
       .lean()
-      .exec();  
-   
-    // const total = await BioData.countDocuments();
-  
-    return {
-      meta: { page, limit, total:usersBioData?.length },
-      data: usersBioData,
-    };
-  };
-  
+      .exec(),
+  ]);
 
-   
+  return {
+    meta: {
+      page,
+      limit,
+      total: totalCount,
+    },
+    data,
+  };
+};
+ 
 
 const getBioDataById = async (id: string): Promise<IBiodata | null> => {
   const result = await BioData.findOneAndUpdate(
