@@ -11,8 +11,8 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
     isBlocked: { type: Boolean, default: false },
     profileStatus: {
       type: String,
-      enum: ['rejected', 'verified', 'in_process', 'not_submitted'],
-      default: 'not_submitted',
+      enum: ['not_started','incomplete','not_submitted','pending', 'rejected', 'verified'],
+      default: 'not_started',
     },
 
     educationalQualifications: {
