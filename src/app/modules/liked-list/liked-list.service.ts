@@ -85,8 +85,8 @@ const getAllLikedList = async (
 
 
 const deleteLikedList = async (id: string): Promise<IUserLikedList | null> => {
-  const result = await UserLikedList.findByIdAndDelete(id);
-  return result;
+  return await UserLikedList.findByIdAndDelete(id);
+
 };
 
 export const UserLikedListService = {

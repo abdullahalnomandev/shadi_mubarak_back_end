@@ -70,16 +70,13 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
 
     generalInformation: {
       type: {
-        gender: { type: String, required: true },
-        dateOfBirth: { type: String, required: true },
-        height: { type: String, required: true },
-        weight: { type: Number, required: true },
-        skin: { type: String, required: true },
-        nationality: { type: String, required: true },
-        maritalStatus: {
-          type: String,
-          required: true,
-        },
+        gender: String,
+        dateOfBirth: Date,
+        height: String,
+        weight: Number,
+        skin:  String,
+        nationality:String,
+        maritalStatus: String,
       },
       required: false,
     },

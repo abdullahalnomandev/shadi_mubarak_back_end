@@ -19,16 +19,6 @@ router.post(
 );
 
 router.get(
-  '/get-liked-list',
-  auth(
-    ENUM_USER_ROLE.USER,
-    ENUM_USER_ROLE.SUPER_ADMIN,
-    ENUM_USER_ROLE.ADMIN
-),
-  UserLikedListController.createOne
-);
-
-router.get(
   '/get-all-liked-list',
   auth(
     ENUM_USER_ROLE.USER,
@@ -39,13 +29,13 @@ router.get(
 );
 
 router.delete(
-  '/delete-liked-list',
+  '/delete-liked-list/:id',
   auth(
     ENUM_USER_ROLE.USER,
     ENUM_USER_ROLE.SUPER_ADMIN,
     ENUM_USER_ROLE.ADMIN
 ),
-  UserLikedListController.createOne
+  UserLikedListController.deleteLikedList
 );
 
 

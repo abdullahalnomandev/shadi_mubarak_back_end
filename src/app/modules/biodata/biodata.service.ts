@@ -2,81 +2,15 @@ import { paginationHelper } from '../../../helpers/paginationHelper';
 import { SortOrder } from 'mongoose';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
-import { IUserFilters } from '../users/user.interface';
-import { IBiodata } from './biodata.interface';
+import { IBiodata, IBioDataFilters } from './biodata.interface';
 import { BioData } from './biodata.model';
 import { bioDataSearchableFields } from './biodata.constant';
 
-
-// const getALlBioData = async (
-//   filters: IUserFilters,
-//   paginationOptions: IPaginationOptions
-// ): Promise<IGenericResponse<IBiodata[]>> => {
-//   const { searchTerm, ...filtersData } = filters;
-//   const andConditions = [];
-
-//   // Handle search term filtering
-//   if (searchTerm) {
-//     andConditions.push({
-//       $or: bioDataSearchableFields.map(field => ({
-//         [field]: { $regex: searchTerm, $options: 'i' },
-//       })),
-//     });
-//   }
-
-//   // Handle additional filters
-//   if (Object.keys(filtersData).length > 0) {
-//     andConditions.push({
-//       $and: Object.entries(filtersData).map(([field, value]) => ({
-//         [field]: value,
-//       })),
-//     });
-//   }
-
-//   // Extract pagination details
-//   const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
-
-//   // Construct sorting conditions
-//   const sortConditions: { [key: string]: SortOrder } = {};
-//   if (sortBy && sortOrder) {
-//     sortConditions[sortBy] = sortOrder;
-//   }
-
-//   // Query users with filters, sorting, and pagination
-//   const whereCondition = andConditions.length ? { $and: andConditions } : {};
-//   const usersBioData = await BioData.find(
-//     whereCondition,
-//     {
-//       bioDataNo: 1,
-//       view: 1,
-//       'generalInformation.gender': 1,
-//       'generalInformation.dateOfBirth': 1,
-//       'generalInformation.height': 1,
-//       'generalInformation.skin': 1,
-//       _id: 0,
-//     }
-//   )
-//     .sort(sortConditions)
-//     .skip(skip)
-//     .limit(limit)
-//     .lean()
-//     .exec();
-
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total: usersBioData?.length,
-//     },
-//     data: usersBioData,
-//   };
-// };
-
 const getALlBioData = async (
-  filters: IUserFilters,
+  filters: IBioDataFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBiodata[]>> => {
-  const { searchTerm, ...otherFilters } = filters;
+  const { searchTerm, minAge, maxAge, ...otherFilters } = filters;
 
   // 1) Build the base filter object
   const query: Record<string, unknown> = {};
@@ -88,7 +22,23 @@ const getALlBioData = async (
     }));
   }
 
-  // 1b) Exact‐match filters
+  // 1b) Age range filter
+  if (minAge || maxAge) {
+    const today = new Date();
+    const dateQuery: Record<string, Date> = {};
+
+    if (maxAge) {
+      const minDate = new Date(today.getFullYear() - Number(maxAge), today.getMonth(), today.getDate());
+      dateQuery.$gte = minDate;
+    }
+
+    if (minAge) {
+      const maxDate = new Date(today.getFullYear() - Number(minAge), today.getMonth(), today.getDate());
+      dateQuery.$lte = maxDate;
+    }
+    query['generalInformation.dateOfBirth'] = dateQuery;
+  }
+  // 1c) Exact‐match filters
   for (const [key, value] of Object.entries(otherFilters)) {
     if (value !== undefined && value !== null && value !== '') {
       query[key] = value;

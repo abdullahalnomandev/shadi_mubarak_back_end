@@ -132,4 +132,12 @@ export type IBiodata = {
     agreement?: Agreement;
     contact?: Contact;
   };
+
   export type BioDataModel = Model<IBiodata, Record<string, unknown>>;
+
+  export type IBioDataFilters = {
+    searchTerm?: string;
+    minAge?: number;
+    maxAge?: number;
+  };
+  
