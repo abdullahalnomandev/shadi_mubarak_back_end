@@ -9,6 +9,8 @@ export type IUser = {
   email:string;
   role: string;
   password: string;
+  isDeleted?: boolean;
+  status?: "active" | "blocked";
   bioData : Types.ObjectId | IBiodata;
 };
 

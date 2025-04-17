@@ -5,6 +5,8 @@ import { IChangePassword, ILoginUser, ILoginUserResponse, IRefreshTokenResponse 
 import  { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import { sendEmail } from '../../../shared/sendEmail';
+import bcrypt from 'bcrypt';
 
 const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse> => {
   const { email, password } = payload;
@@ -80,7 +82,7 @@ const changePassword = async (userData:JwtPayload | null,payload:IChangePassword
   
   // checking old password
   if (
-    isUserExist &&
+isUserExist &&
     !(await User.isPasswordMatch(oldPassword, isUserExist.password))
   ) {
     throw new ApiError(httpStatus.UNAUTHORIZED, ' Old password is incorrect');
@@ -90,8 +92,55 @@ const changePassword = async (userData:JwtPayload | null,payload:IChangePassword
   isUserExist.save();
 }
 
+
+const forgetPassword = async ( email:string):Promise<void> =>{
+    
+  const user = await User.isUserExist(email);
+  if (!user)  throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist'); 
+  
+  const jwtPayload = {
+    id: user.id,
+    role: user.role,
+  };
+
+  const resetToken = jwtHelpers.createToken(
+    jwtPayload,
+    config.jwt.secret as string,
+    '10m',
+  );
+
+  const resetUILink = `${config.reset_pass_ui_link}?id=${user.email}&token=${resetToken} `;
+  await sendEmail(user.email, resetUILink);
+
+}
+
+const resetPassword = async (payload:{email:string,password:string},token:string):Promise<void> =>{
+
+    const user = await User.isUserExist(payload.email);
+    if (!user)  throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+
+    const decoded = jwtHelpers.verifiedToken(token,config.jwt.secret as Secret);
+    if (!decoded) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'Invalid token');
+    }
+
+    const newHasPassword = await bcrypt.hashSync(
+      user.password,
+      Number(config.bcrypt_salt_round)
+    );
+
+    await User.findOneAndUpdate(
+      { id:decoded.id },
+      {
+        password: newHasPassword,
+      },
+    );
+}
+
 export const Authservice = {
   loginUser,
   refreshToken,
-  changePassword
+  changePassword,
+  forgetPassword,
+  resetPassword
 };
