@@ -10,7 +10,7 @@ const getALlBioData = async (
   filters: IBioDataFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBiodata[]>> => {
-  const { searchTerm, minAge, maxAge, ...otherFilters } = filters;
+  const { searchTerm, minAge, maxAge, minHeight, maxHeight, ...otherFilters } = filters;
 
   // 1) Build the base filter object
   const query: Record<string, unknown> = {};
@@ -38,7 +38,20 @@ const getALlBioData = async (
     }
     query['generalInformation.dateOfBirth'] = dateQuery;
   }
-  // 1c) Exact‐match filters
+  // 1c) Height range filter
+  if (minHeight || maxHeight) {
+    const heightQuery: Record<string, number> = {};
+
+    if (maxHeight) {
+      heightQuery.$lte = Number(maxHeight);
+    }  
+    if (minHeight) {
+      heightQuery.$gte = Number(minHeight);
+    }
+    query['generalInformation.height'] = heightQuery;
+  }
+
+  // 1d) Exact‐match filters
   for (const [key, value] of Object.entries(otherFilters)) {
     if (value !== undefined && value !== null && value !== '') {
       query[key] = value;

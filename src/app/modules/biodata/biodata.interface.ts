@@ -139,5 +139,7 @@ export type IBiodata = {
     searchTerm?: string;
     minAge?: number;
     maxAge?: number;
+    minHeight?: number;
+    maxHeight?: number;
   };
   

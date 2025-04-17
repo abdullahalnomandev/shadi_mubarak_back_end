@@ -9,5 +9,7 @@ export const bioDataFilterableFields = [
     "occupation.occupations",
     "familyInformation.familyFinancialStatus",
     "minAge",  // Add these new fields
-    "maxAge"
+    "maxAge",
+    "minHeight",
+    "maxHeight"
 ];
