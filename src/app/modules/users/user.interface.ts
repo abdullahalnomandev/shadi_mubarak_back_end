@@ -3,7 +3,7 @@ import  { Model, Types } from 'mongoose';
 import { IBiodata } from '../biodata/biodata.interface';
 
 export type IUser = {
-  toObject(): { [x: string]: any; password: any; };
+  _id: Types.ObjectId;
   id: Types.ObjectId;
   bioDataNo: string;
   email:string;

@@ -11,10 +11,15 @@ type IGeneralInformation = {
 }
 
 type IAddress = {
-    present_address : string;
-    permanent_address : string;
-    grow_up: string;
-    isSame_address: boolean;
+  present_address: {
+    full: string;
+    area: string;
+  };
+  permanent_address: {
+    full: string;
+    area: string;
+  };
+  grow_up: string;
 }
 
 type ProfileStatus = 

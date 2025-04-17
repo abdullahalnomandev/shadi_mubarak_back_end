@@ -3,7 +3,7 @@ import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 import { UserLikedListService } from './liked-list.service';
-import { IUserLikedList } from './liked-list.interface';
+import { ILikedUserResponse, IUserLikedList } from './liked-list.interface';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 
@@ -27,7 +27,7 @@ const getAllLikedList = catchAsync(async (req: Request, res: Response) => {
   const paginationOptions = pick(req.query, paginationFields);
   const result = await UserLikedListService.getAllLikedList(userId, paginationOptions);
 
-  sendResponse<IUserLikedList[]>(res, {
+  sendResponse<ILikedUserResponse[]>(res, {
     statusCode: httpStatus.OK,
     status: 'success',
     message: 'Liked lists retrieved successfully',
