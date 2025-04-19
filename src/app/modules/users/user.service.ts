@@ -1,5 +1,5 @@
 import { User } from './user.model';
-import { IUser, IUserFilters } from './user.interface';
+import {  IUser, IUserFilters } from './user.interface';
 import { generateUserId } from './user.utils';
 import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -8,8 +8,6 @@ import { paginationHelper } from '../../../helpers/paginationHelper';
 import { SortOrder } from 'mongoose';
 import { userSearchableFields } from './user.constant';
 import { BioData } from '../biodata/biodata.model';
-
-
 import mongoose from 'mongoose';
 
 export const createUser = async (user: IUser): Promise<IUser> => {

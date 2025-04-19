@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/users/user.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { BioDataRoutes } from '../modules/biodata/biodata.route';
 import { UserLikedListRoutes } from '../modules/liked-list/liked-list.route';
+import { PackageRoutes } from '../modules/package/package.route';
 
 const router = express.Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
     {
         path:"/liked-list",
         route: UserLikedListRoutes
+    },
+    {
+        path:"/package",
+        route: PackageRoutes
     }
 ];
 
