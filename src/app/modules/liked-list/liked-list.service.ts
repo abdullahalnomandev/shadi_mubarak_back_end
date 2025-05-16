@@ -1,15 +1,14 @@
-import { ILikedUserResponse, IUserLikedList } from "./liked-list.interface";
-import { UserLikedList } from "./liked-list.model";
-import { IPaginationOptions } from "../../../interfaces/pagination";
-import { IGenericResponse } from "../../../interfaces/common";
-import { paginationHelper } from "../../../helpers/paginationHelper";
-import {  Types } from "mongoose";
+import { Types } from 'mongoose';
+import { paginationHelper } from '../../../helpers/paginationHelper';
+import { IGenericResponse } from '../../../interfaces/common';
+import { IPaginationOptions } from '../../../interfaces/pagination';
+import { ILikedUserResponse, IUserLikedList } from './liked-list.interface';
+import { UserLikedList } from './liked-list.model';
 
 const createOne = async (
   userId: string,
-  likedPersonId: string,
+  likedPersonId: string
 ): Promise<IUserLikedList> => {
-
   return await UserLikedList.create({
     userId,
     likedPersonId,
@@ -20,13 +19,13 @@ const getAllLikedList = async (
   userId: string,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<ILikedUserResponse[]>> => {
-  const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelper(paginationOptions);
 
   const sortConditions: { [key: string]: 1 | -1 } = {};
   if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder === "asc" ? 1 : -1; 
+    sortConditions[sortBy] = sortOrder === 'asc' ? 1 : -1;
   }
-
   // Use aggregation to combine match, lookup, projection, and pagination
   const result = await UserLikedList.aggregate([
     { $match: { userId: new Types.ObjectId(userId) } }, // Match the userId
@@ -37,8 +36,8 @@ const getAllLikedList = async (
         from: 'users', // Assuming the collection name for users is 'users'
         localField: 'likedPersonId',
         foreignField: '_id',
-        as: 'likedPerson'
-      }
+        as: 'likedPerson',
+      },
     },
 
     // Unwind the likedPerson array (only one element)
@@ -50,8 +49,8 @@ const getAllLikedList = async (
         from: 'biodatas', // Assuming the collection name for biodatas is 'biodatas'
         localField: 'likedPerson.bioData',
         foreignField: '_id',
-        as: 'bioData'
-      }
+        as: 'bioData',
+      },
     },
 
     // Unwind the bioData array (only one element)
@@ -65,9 +64,9 @@ const getAllLikedList = async (
         likedPerson: {
           _id: 1,
           bioDataNo: 1,
-          address: { $ifNull: ['$bioData.address.present_address.full', null] } 
-        }
-      }
+          address: { $ifNull: ['$bioData.address.present_address.full', null] },
+        },
+      },
     },
 
     { $skip: skip },
@@ -83,10 +82,8 @@ const getAllLikedList = async (
   };
 };
 
-
 const deleteLikedList = async (id: string): Promise<IUserLikedList | null> => {
   return await UserLikedList.findByIdAndDelete(id);
-
 };
 
 export const UserLikedListService = {

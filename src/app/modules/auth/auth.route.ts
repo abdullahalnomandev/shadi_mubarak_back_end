@@ -14,6 +14,12 @@ router.post(
 );
 
 router.post(
+  '/register',
+  validateRequest(AuthValidationZodSchema.registerZodSchema),
+  AuthController.register
+);
+
+router.post(
   '/refresh-token',
   validateRequest(AuthValidationZodSchema.refreshTokenZodSchema),
   AuthController.refreshToken
@@ -22,22 +28,18 @@ router.post(
 // router.post(
 //   '/forgot-password',
 //   validateRequest(AuthValidationZodSchema.forgotPasswordZodSchema),
-//   AuthController.forgotPassword 
+//   AuthController.forgotPassword
 // )
 
 router.post(
   '/reset-password',
   validateRequest(AuthValidationZodSchema.resetPasswordZodSchema),
-  AuthController.resetPassword 
-)
+  AuthController.resetPassword
+);
 
 router.post(
   '/change-password',
-  auth(
-    ENUM_USER_ROLE.ADMIN,
-    ENUM_USER_ROLE.SUPER_ADMIN,
-    ENUM_USER_ROLE.USER
-  ),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(AuthValidationZodSchema.changePasswordZodSchema),
   AuthController.changePassword
 );

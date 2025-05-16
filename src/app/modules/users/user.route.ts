@@ -2,6 +2,8 @@ import express from 'express';
 import { UserController } from './user.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidationZodSchema } from './user.validation';
+import auth from '../../middlewares/auth';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 
 
 const router = express.Router();
@@ -20,10 +22,11 @@ router.patch(
 );
 router.delete('/:id', UserController.deleteUser);
 router.get('/',
-  // auth(
-  //   ENUM_USER_ROLE.ADMIN,
-  //   ENUM_USER_ROLE.SUPER_ADMIN
-  // ),
+  auth(
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.USER
+  ),
   UserController.getAllUsers);
 
 

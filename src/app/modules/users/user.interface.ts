@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-vars */
-import  { Model, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IBiodata } from '../biodata/biodata.interface';
 
 export type IUser = {
   _id: Types.ObjectId;
   id: Types.ObjectId;
   bioDataNo: string;
-  email:string;
+  email: string;
   role: string;
+  phone: string;
   password: string;
   isDeleted?: boolean;
-  status?: "active" | "blocked";
-  bioData : Types.ObjectId | IBiodata;
+  status?: 'active' | 'blocked';
+  bioData: Types.ObjectId | IBiodata;
 };
 
 // export type IUserMethods = {
@@ -23,8 +24,13 @@ export type IUser = {
 // };
 
 export type UserModel = {
-  isUserExist(email:string): Promise<Pick<IUser, "id" |  "email" | "password"|"role" | "bioDataNo">>;
-  isPasswordMatch(givenPassword:string,savePassword:string): Promise<boolean>;
+  isUserExist(
+    email: string
+  ): Promise<Pick<IUser, 'id' | 'email' | 'password' | 'role' | 'bioDataNo'>>;
+  isPasswordMatch(
+    givenPassword: string,
+    savePassword: string
+  ): Promise<boolean>;
 } & Model<IUser>;
 
 // export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>;

@@ -10,7 +10,8 @@ const getALlBioData = async (
   filters: IBioDataFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBiodata[]>> => {
-  const { searchTerm, minAge, maxAge, minHeight, maxHeight, ...otherFilters } = filters;
+  const { searchTerm, minAge, maxAge, minHeight, maxHeight, ...otherFilters } =
+    filters;
 
   // 1) Build the base filter object
   const query: Record<string, unknown> = {};
@@ -28,12 +29,20 @@ const getALlBioData = async (
     const dateQuery: Record<string, Date> = {};
 
     if (maxAge) {
-      const minDate = new Date(today.getFullYear() - Number(maxAge), today.getMonth(), today.getDate());
+      const minDate = new Date(
+        today.getFullYear() - Number(maxAge),
+        today.getMonth(),
+        today.getDate()
+      );
       dateQuery.$gte = minDate;
     }
 
     if (minAge) {
-      const maxDate = new Date(today.getFullYear() - Number(minAge), today.getMonth(), today.getDate());
+      const maxDate = new Date(
+        today.getFullYear() - Number(minAge),
+        today.getMonth(),
+        today.getDate()
+      );
       dateQuery.$lte = maxDate;
     }
     query['generalInformation.dateOfBirth'] = dateQuery;
@@ -44,7 +53,7 @@ const getALlBioData = async (
 
     if (maxHeight) {
       heightQuery.$lte = Number(maxHeight);
-    }  
+    }
     if (minHeight) {
       heightQuery.$gte = Number(minHeight);
     }
@@ -59,7 +68,8 @@ const getALlBioData = async (
   }
 
   // 2) Extract pagination & sorting
-  const { page, limit, skip, sortBy, sortOrder } = paginationHelper(paginationOptions);
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelper(paginationOptions);
 
   const sortCondition: Record<string, SortOrder> = {};
   if (sortBy && sortOrder) {
@@ -97,97 +107,95 @@ const getALlBioData = async (
     data,
   };
 };
- 
 
 const getBioDataById = async (id: string): Promise<IBiodata | null> => {
   const result = await BioData.findOneAndUpdate(
     { bioDataNo: id },
     { $inc: { view: 1 } },
-    { new: true } 
-  ).lean<IBiodata>().exec();
+    { new: true }
+  )
+    .lean<IBiodata>()
+    .exec();
 
   return result;
 };
 
-  const getBioDataStep = async (
-    bioDataNo: string,
-    stepNo: number
-  ): Promise<Partial<IBiodata> | null> => {
-  
-    const stepFieldMap: Record<number, keyof IBiodata> = {
-      1: 'generalInformation',
-      2: 'address',
-      3: 'educationalQualifications',
-      4: 'familyInformation',
-      5: 'personalInformation',
-      6: 'occupation',
-      7: 'marriageRelatedInformation',
-      8:'expectedPartner',
-      9:'agreement',
-      10:'contact'
-
-    };
-  
-    const fieldToGet = stepFieldMap[stepNo];
-  
-    if (!fieldToGet) {
-      throw new Error('Invalid step number');
-    }
-  
-    const result = await BioData.findById(bioDataNo,
-      { [fieldToGet]: 1,completedSteps:1, _id: 0 }
-    ).lean();
-  
-    return result;
+const getBioDataStep = async (
+  bioDataNo: string,
+  stepNo: number
+): Promise<Partial<IBiodata> | null> => {
+  const stepFieldMap: Record<number, keyof IBiodata> = {
+    1: 'general_information',
+    2: 'address',
+    3: 'family_information',
+    4: 'educational_qualifications',
+    5: 'personal_information',
+    6: 'occupation',
+    7: 'marriage_related_information',
+    8: 'expected_partner',
+    9: 'agreement',
+    10: 'contact',
   };
-   
 
-  const updateBioData = async (
-    bioDataNo: string,
-    stepNo: number,
-    payload: Partial<IBiodata>
-  ): Promise<IBiodata | null> => {
-  
-    const stepFieldMap: Record<number, keyof IBiodata> = {
-      1: 'generalInformation',
-      2: 'address',
-      3: 'educationalQualifications',
-      4: 'familyInformation',
-      5: 'personalInformation',
-      6: 'occupation',
-      7:'marriageRelatedInformation',
-      8:'expectedPartner',
-      9:'agreement',
-      10:'contact'
-    };
-  
-    const fieldToUpdate = stepFieldMap[stepNo];
-  
-    if (!fieldToUpdate) {
-      throw new Error('Invalid step number');
-    }
-  
-    const updateFieldValue = payload[fieldToUpdate];
-    if (!updateFieldValue) {
-      throw new Error(`Missing data for step ${stepNo}`);
-    }
-  
-    const result = await BioData.findOneAndUpdate(
-      { bioDataNo },
-      {
-        $set: { [fieldToUpdate]: updateFieldValue },
-        $addToSet: { completedSteps: stepNo }
-      },
-      { new: true }
-    );
-  
-    return result;
+  const fieldToGet = stepFieldMap[stepNo];
+
+  if (!fieldToGet) {
+    throw new Error('Invalid step number');
+  }
+
+  const result = await BioData.findById(bioDataNo, {
+    [fieldToGet]: 1,
+    completedSteps: 1,
+    _id: 0,
+  }).lean();
+
+  return result;
+};
+
+const updateBioData = async (
+  bioDataNo: string,
+  stepNo: number,
+  payload: Partial<IBiodata>
+): Promise<IBiodata | null> => {
+  const stepFieldMap: Record<number, keyof IBiodata> = {
+    1: 'general_information',
+    2: 'address',
+    3: 'family_information',
+    4: 'educational_qualifications',
+    5: 'personal_information',
+    6: 'occupation',
+    7: 'marriage_related_information',
+    8: 'expected_partner',
+    9: 'agreement',
+    10: 'contact',
   };
-  
+
+  const fieldToUpdate = stepFieldMap[stepNo];
+
+  if (!fieldToUpdate) {
+    throw new Error('Invalid step number');
+  }
+
+  const updateFieldValue = payload[fieldToUpdate];
+  if (!updateFieldValue) {
+    throw new Error(`Missing data for step ${stepNo}`);
+  }
+
+  const result = await BioData.findOneAndUpdate(
+    { bioDataNo },
+    {
+      $set: { [fieldToUpdate]: updateFieldValue },
+      $addToSet: { completedSteps: stepNo },
+    },
+    { new: true }
+  );
+
+  return result;
+};
 
 export const BioDataService = {
-    getALlBioData,
-    getBioDataStep,
-    getBioDataById,
-    updateBioData
+  getALlBioData,
+  getBioDataStep,
+  getBioDataById,
+  updateBioData,
 };

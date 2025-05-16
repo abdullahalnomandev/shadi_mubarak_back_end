@@ -39,6 +39,17 @@ const globalErrorHandler:ErrorRequestHandler = (error ,req:Request, res:Response
         message = simplifiedError.message;
         errorMessages = simplifiedError.errorMessages;
     }
+    else if (error?.name === 'TokenExpiredError') {
+        message = error?.message
+        statusCode = 401;
+        errorMessages = error?.message ?
+        [
+            {
+                path:'',
+                message: error?.message
+            }
+        ] : [];
+    }
     else if (error instanceof ApiError){
         statusCode = error?.statusCode;
         message = error?.message;

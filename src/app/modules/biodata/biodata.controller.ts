@@ -7,63 +7,63 @@ import { BioDataService } from './biodata.service';
 import pick from '../../../shared/pick';
 import { bioDataFilterableFields } from './biodata.constant';
 import { paginationFields } from '../../../constants/pagination';
-import { IGenericResponse } from '../../../interfaces/common';
 // import pick from '../../../shared/pick';
 // import { bioDataFilterableFields } from './biodata.constant';
 // import { paginationFields } from '../../../constants/pagination';
 
-const updateBioData = catchAsync(async (req:Request,res:Response) => {
-    const {...bioData} = req.body;
-    const bioDataNo = (req as any).user.bioDataNo;
-    const stepNo = Number(req.params.stepNo);
-    const result = await BioDataService.updateBioData(bioDataNo,stepNo,bioData);
-    sendResponse<IBiodata>(res,{
-        statusCode: httpStatus.OK,
-        status:'success',
-        message: 'BioData updated successfully',
-        data: result
-    })
-})
+const updateBioData = catchAsync(async (req: Request, res: Response) => {
+  const { ...bioData } = req.body;
+  const bioDataNo = (req as any).user.bioDataNo;
+  const stepNo = Number(req.params.stepNo);
+  //   console.log({ stepNo, bioData });
+  const result = await BioDataService.updateBioData(bioDataNo, stepNo, bioData);
+  sendResponse<IBiodata>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData updated successfully',
+    data: result,
+  });
+});
 
-const getALlBioData = catchAsync(async (req:Request,res:Response) => {
+const getALlBioData = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, bioDataFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await BioDataService.getALlBioData(filters, paginationOptions);
 
-    const filters = pick(req.query,bioDataFilterableFields)
-    const patinationOptions = pick(req.query, paginationFields)     
-    const result = await BioDataService.getALlBioData(filters, patinationOptions);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
+});
 
-    sendResponse<IGenericResponse<Partial<IBiodata>[]> >(res,{
-        statusCode: httpStatus.OK,
-        status: 'success',
-        message: 'BioData retrieved successfully',
-        data: result
-    }) 
-})
-
-const getSingleBioData = catchAsync(async (req:Request,res:Response) => {
-    const {id} = req.params;
-    const result = await BioDataService.getBioDataById(id); 
-    sendResponse<IBiodata>(res,{
-        statusCode: httpStatus.OK,
-        status:'success',
-        message: 'BioData retrieved successfully', 
-        data: result
-    })
-})
-const getDetailsByStep = catchAsync(async (req:Request,res:Response) => {
-    const stepNo = Number(req.params.stepNo);
-    const bioDataId = "67fc068da8a5af9875132620";
-    // const bioDataId = (req as any).user.id ;
-    const result = await BioDataService.getBioDataStep(bioDataId,stepNo); 
-    sendResponse<Partial<IBiodata>>(res,{
-        statusCode: httpStatus.OK,
-        status:'success',
-        message: 'BioData retrieved successfully', 
-        data: result
-    })
-})
+const getSingleBioData = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await BioDataService.getBioDataById(id);
+  sendResponse<IBiodata>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData retrieved successfully',
+    data: result,
+  });
+});
+const getDetailsByStep = catchAsync(async (req: Request, res: Response) => {
+  const stepNo = Number(req.params.stepNo);
+  const bioDataId = '67fc068da8a5af9875132620';
+  // const bioDataId = (req as any).user.id ;
+  const result = await BioDataService.getBioDataStep(bioDataId, stepNo);
+  sendResponse<Partial<IBiodata>>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData retrieved successfully',
+    data: result,
+  });
+});
 export const BioDataController = {
-    updateBioData,
-    getALlBioData,
-    getDetailsByStep,
-    getSingleBioData
+  updateBioData,
+  getALlBioData,
+  getDetailsByStep,
+  getSingleBioData,
 };
