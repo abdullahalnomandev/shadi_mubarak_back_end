@@ -22,7 +22,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
       default: 'not_started',
     },
 
-    educational_qualifications: {
+    education: {
       type: {
         // SSC
         ssc_passing_year: {
@@ -120,7 +120,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
         clothingOutside: { type: String },
         wearingNiqabSince: { type: String },
         praysFiveTimes: { type: Boolean },
-        missedPrayersPerWeek: { type: Number },
+        missedPrayersPerWeek: { type: String },
         compliesWithMahram: { type: Boolean },
         canReciteQuranCorrectly: { type: Boolean },
         fiqhFollowed: { type: String },
@@ -180,7 +180,10 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
 
     expected_partner: {
       type: {
-        age: String,
+        age: {
+          type: [Number],
+          required: true,
+        },
         complexion: {
           type: [String],
           enum: ['brown', 'fair', 'dark', 'bright_brown', 'bright_fair'],

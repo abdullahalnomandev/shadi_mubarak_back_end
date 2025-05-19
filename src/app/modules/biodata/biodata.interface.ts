@@ -51,10 +51,10 @@ type Agreement = {
 };
 
 type ExpectedPartner = {
-  age: number; // ex: 18-25, 26-30, 31-35, 36-40
+  age: number[]; // ex: 18-25, 26-30, 31-35, 36-40
   complexion: string[]; // e.g. ["Fair", "Light", "Dark"]
   height: string;
-  educationalQualification: string;
+  education: string;
   district: string;
   maritalStatus: string[];
   profession: string;
@@ -71,7 +71,7 @@ type PersonalInformation = {
   clothingOutside: string; // e.g. "Abaya and Niqab", "Hijab only", etc.
   wearingNiqabSince: string; // e.g. "2015", "Since childhood", or "Not applicable"
   praysFiveTimes: boolean;
-  missedPrayersPerWeek: number; // how many times Salah is missed per week
+  missedPrayersPerWeek: string; // how many times Salah is missed per week
   compliesWithMahram: boolean; // e.g. doesn’t travel without mahram
   canReciteQuranCorrectly: boolean;
   fiqhFollowed: string; // e.g. "Hanafi", "Shafi'i", etc.
@@ -116,7 +116,7 @@ export type IBiodata = {
   completedSteps: number[]; // e.g. [1,2,3,4,5,6]
   isBlocked: boolean;
   profileStatus?: ProfileStatus;
-  educational_qualifications?: EducationalQualifications;
+  education?: EducationalQualifications;
   general_information?: IGeneralInformation;
   marriage_related_information?: MarriageRelatedInformation;
   address?: IAddress;
