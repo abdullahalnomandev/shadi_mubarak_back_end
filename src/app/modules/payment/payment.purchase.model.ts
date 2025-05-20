@@ -8,13 +8,15 @@ const paymentPurchaseSchema = new Schema<IPaymentPurchase>(
       ref: 'User',
       required: true,
     },
-    total_connection: {
+    total_connections: {
       type: Number,
       required: true,
+      default: 0,
     },
     total_amount: {
       type: Number,
       required: true,
+      default: 0,
     }
   },
   {

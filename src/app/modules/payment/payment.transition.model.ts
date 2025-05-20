@@ -4,36 +4,36 @@ import { IPaymentTransition } from './payment.interface';
 
 const paymentTransitionSchema = new Schema<IPaymentTransition>(
   {
-    transition_id: {
-      type: String,
-      required: true,
-      unique: true,
+    payment_id: {
+      type:String,
+      require : true,
+      unique : true
     },
     user_id: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    package_name: {
-      type: String,
-      required: true,
-    },
-    connection: {
-      type: String,
+    package_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Package',
       required: true,
     },
     method: {
       type: String,
       required: true,
     },
+    isPayment: {
+      type: Boolean,
+      default: false,
+    },
     amount: {
       type: Number,
-      required: true,
+      default: 0,
     },
-    status: {
-      type: String,
-      enum: ['pending', 'success', 'failed'],
-      default: 'pending',
+    connections: {
+      type: Number,
+      default: 0,
     },
   },
   {

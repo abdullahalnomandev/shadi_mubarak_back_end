@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IPurchasedBioData } from './payment.interface';
+import { IPurchasedBioData } from '../payment/payment.interface';
 
 const purchasedBioDataSchema = new Schema<IPurchasedBioData>(
   {
