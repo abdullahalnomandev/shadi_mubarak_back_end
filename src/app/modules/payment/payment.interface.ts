@@ -22,13 +22,6 @@ export type IPaymentPurchase = {
   }
 
 
-  export type IPurchasedBioData = {
-    userId: Schema.Types.ObjectId;
-    biodata_no: string; 
-    payment_id: Schema.Types.ObjectId;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
   
   export type ITransaction = {
     user_id: Schema.Types.ObjectId;

@@ -3,7 +3,7 @@ import { IUser } from '../users/user.interface';
 
 export type IUserLikedList ={
   userId: Types.ObjectId | IUser;        
-  likedPersonId: Types.ObjectId | IUser;  
+  likedPersonBioNo: string;  
 }
 
 export type ILikedUserResponse = {

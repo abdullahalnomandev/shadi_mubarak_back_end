@@ -12,53 +12,69 @@ import config from "../../../config";
 const createPayment = async ({
   payload,
   url,
+  user_id
 }: {
   payload: IPaymentTransitionInfo;
   url: string;
+  user_id: string;
 }): Promise<{ redirectUrl: string }> => {
-  const pkg = await Package.findById(payload.package_id);
-  if (!pkg) throw new Error("Package not found");
-
   let redirectUrl = "";
 
-  switch (payload.method) {
-    case "bkash": {
-      const payment = await bConfig.createPayment({
-        mode: "0011",
-        payerReference: " ",
-        callbackURL: `${url}/callback`,
-        amount: pkg.price.toString(),
-        currency: "BDT",
-        intent: "sale",
-        merchantInvoiceNumber: crypto.randomUUID(),
-      });
+  // Start a MongoDB transaction
+  const session = await Package.startSession();
+  
+  try {
+    await session.startTransaction();
 
-      await PaymentTransition.create({
-        payment_id: payment.paymentID,
-        user_id: payload.user_id,
-        package_id: pkg._id,
-        method: payload.method,
-        amount: pkg.price,
-        connection: pkg.connections,
-      });
-
-      redirectUrl = payment.bkashURL;
-      break;
+    // Find package within transaction
+    const pkg = await Package.findById(payload.package_id).session(session);
+    if (!pkg) {
+      throw new Error("Package not found");
     }
 
-    // Future case for other payment methods
-    // case "nagad":
-    // case "sslcommerz":
-    //   // Add logic here
-    //   break;
+    switch (payload.method) {
+      case "bkash": {
+        // Create bKash payment
+        const payment = await bConfig.createPayment({
+          mode: "0011",
+          payerReference: " ",
+          callbackURL: `${url}/callback`,
+          amount: pkg.price.toString(),
+          currency: "BDT",
+          intent: "sale",
+          merchantInvoiceNumber: crypto.randomUUID(),
+        });
 
-    default:
-      throw new Error(`Unsupported payment method: ${payload.method}`);
+        // Create payment transition record within transaction
+        await PaymentTransition.create([{
+          payment_id: payment.paymentID,
+          user_id: user_id,
+          package_id: pkg._id,
+          method: payload.method,
+          amount: pkg.price,
+          connection: pkg.connections,
+        }], { session });
+
+        redirectUrl = payment.bkashURL;
+        break;
+      }
+      default:
+        throw new Error(`Unsupported payment method: ${payload.method}`);
+    }
+
+    // Commit the transaction
+    await session.commitTransaction();
+    
+    return { redirectUrl };
+
+  } catch (error) {
+    // Abort transaction on error
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    // End session
+    session.endSession();
   }
-
-  return {
-    redirectUrl,
-  };
 };
 
 const PaymentCallback = async (payload: IBKashCallbackProps, res: Response): Promise<void> => {

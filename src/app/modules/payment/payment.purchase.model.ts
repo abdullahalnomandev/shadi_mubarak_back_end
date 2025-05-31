@@ -7,6 +7,7 @@ const paymentPurchaseSchema = new Schema<IPaymentPurchase>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+      unique: true,
     },
     total_connections: {
       type: Number,

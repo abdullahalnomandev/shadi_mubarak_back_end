@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
-import { IPurchasedBioData } from '../payment/payment.interface';
+import { IPurchaseBioData } from './purchase-biodata.interface';
 
-const purchasedBioDataSchema = new Schema<IPurchasedBioData>(
+const purchasedBioDataSchema = new Schema<IPurchaseBioData>(
   {
-    userId: {
+    user_id: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -12,12 +12,7 @@ const purchasedBioDataSchema = new Schema<IPurchasedBioData>(
       type: String,
       required: true,
       index: true,
-    },
-    payment_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'PaymentPurchase',
-      required: true,
-    },
+    }
   },
   {
     timestamps: true,
@@ -28,9 +23,9 @@ const purchasedBioDataSchema = new Schema<IPurchasedBioData>(
 );
 
 // Create compound index for faster queries
-purchasedBioDataSchema.index({ userId: 1, biodata_no: 1 }, { unique: true });
+purchasedBioDataSchema.index({ user_id: 1, biodata_no: 1 }, { unique: true });
 
-export const PurchasedBioData = model<IPurchasedBioData>(
+export const PurchasedBioData = model<IPurchaseBioData>(
   'PurchasedBioData',
   purchasedBioDataSchema
 );

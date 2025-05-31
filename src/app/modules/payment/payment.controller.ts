@@ -9,9 +9,10 @@ import {  IBKashCallbackProps } from './payment.interface';
 // Create a new package
 const createPayment = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
+  const user_id = req.user?.id;
 
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`
-  const result = await PaymentService.createPayment({payload,url});
+  const result = await PaymentService.createPayment({payload,url,user_id});
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     status: 'success',

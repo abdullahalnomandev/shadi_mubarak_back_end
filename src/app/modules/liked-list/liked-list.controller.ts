@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Response, Request } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -9,8 +10,8 @@ import { paginationFields } from '../../../constants/pagination';
 
 const createOne = catchAsync(async (req: Request, res: Response) => {
   const userId = (req.user as any).id;
-  const { likedPersonId } = req.body;
-  const result = await UserLikedListService.createOne(userId, likedPersonId);
+  const { likedPersonBioNo } = req.body;
+  const result = await UserLikedListService.createOne(userId, likedPersonBioNo);
 
   sendResponse<IUserLikedList>(res, {
     statusCode: httpStatus.OK,
@@ -47,8 +48,22 @@ const deleteLikedList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getOneLikedList = catchAsync(async (req: Request, res: Response) => {
+  const { likedPersonBioNo } = req.params;
+  const userId = (req.user as any).id; // Assuming you have user information in the request object after authentication middleware
+  const result = await UserLikedListService.getOneLikedList({userId,likedPersonBioNo});
+
+  sendResponse<IUserLikedList>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData retrieved successfully',
+    data: result,
+  });
+});
+
 export const UserLikedListController = {
   createOne,
   getAllLikedList,
   deleteLikedList,
+  getOneLikedList
 };

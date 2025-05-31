@@ -6,106 +6,6 @@
     "auditLog": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\.7f3e8bde0ebc511d432ef9cf90dff3b49af37a47-audit.json",
     "files": [
         {
-            "date": 1746625148527,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-07-05-19-error.log",
-            "hash": "6c8ada5c6f55e4b2bea2fde9b08114a7c7e1abd6de8ad923eabf767bc70e6a58"
-        },
-        {
-            "date": 1746627513837,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-07-05-20-error.log",
-            "hash": "c46a5af70e8a127c9ad44baa7b478f443b95246d9e064fe73eb86fa9984c727c"
-        },
-        {
-            "date": 1746630855335,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-07-05-21-error.log",
-            "hash": "fd5c950e7c338e730c227ec25f289bb0ea9ebf905f61368fb8c822b8d8b22147"
-        },
-        {
-            "date": 1746792985703,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-09-05-18-error.log",
-            "hash": "43405d487216c2e53e9ee70b753bab0eb2e94508297607505b622fd004f8e708"
-        },
-        {
-            "date": 1746878313198,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-10-05-17-error.log",
-            "hash": "01ac0ccd1a233c0da25eceedfc036f77a548667058157a048d1c65f5f03d8043"
-        },
-        {
-            "date": 1747179357278,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-05-error.log",
-            "hash": "607ab89b5eb240f9012642acb1685becab7dd7e644557dbbf5bd79b85a2c2bab"
-        },
-        {
-            "date": 1747222901771,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-17-error.log",
-            "hash": "84cd9706478f026c068eade44fa1a2ac5cef7d7e2a201504cc5ac374b682abbd"
-        },
-        {
-            "date": 1747224757006,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-18-error.log",
-            "hash": "bd406833a0bdd95945740fce91a157132b764544ee806f4eb647d67267794ccb"
-        },
-        {
-            "date": 1747229586219,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-19-error.log",
-            "hash": "7d60c6c4cf793c2a80fadc93a980bea6c9ca1b272b3ad3916b32cd8060ea6079"
-        },
-        {
-            "date": 1747231256330,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-20-error.log",
-            "hash": "8e992df252fe6dff7702c2fa4eeb3d2518baae62add6d2cbfc26e57c7ae9457d"
-        },
-        {
-            "date": 1747237825404,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-21-error.log",
-            "hash": "60ba064876972f845b91de9087b6d59dcbff57d5b6a80561897988e19e724776"
-        },
-        {
-            "date": 1747242257030,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-14-05-23-error.log",
-            "hash": "e6fb653517b36f381fd88d3e874d9be714f99a9a79d674e9ac13905e9103cffa"
-        },
-        {
-            "date": 1747326088021,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-15-05-22-error.log",
-            "hash": "84bd26aeeb19601fb0681a75186732fd4049be6355f697bebc96c2dd39d96725"
-        },
-        {
-            "date": 1747329023159,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-15-05-23-error.log",
-            "hash": "9e40462b8fc5ba0a055bb4ed2a6edab812cfc4683239698aee4895761ef04276"
-        },
-        {
-            "date": 1747385417386,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-16-05-14-error.log",
-            "hash": "6c9390e558340f3e901685a07780240d608ccb38306245fb87ec9cde826d768d"
-        },
-        {
-            "date": 1747386149878,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-16-05-15-error.log",
-            "hash": "a70fb49f890420d75ff763093e21ef055c8cb19ae4a1f8cab1832a4ea99dd16d"
-        },
-        {
-            "date": 1747389620377,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-16-05-16-error.log",
-            "hash": "09ad11b27a0de44f6dbff6fbe9db4b748e4f19c4b1a25ca0362610cdae30db43"
-        },
-        {
-            "date": 1747411122781,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-16-05-21-error.log",
-            "hash": "4338b6302ac0079684f80e3dcdddea36099e3737a2b5fdf7cfc531538119822d"
-        },
-        {
-            "date": 1747411209388,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-16-05-22-error.log",
-            "hash": "08e667a106da81611dfa9649ac4c9391969c304fa105c2c3beba1a331c60f513"
-        },
-        {
-            "date": 1747430316970,
-            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-17-05-03-error.log",
-            "hash": "be21a9996f27830df2d21fbfc80e5b4c645acd039d03bf3990fa7a46485530ae"
-        },
-        {
             "date": 1747478482716,
             "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-17-05-16-error.log",
             "hash": "1b213b33b43e40a6a5cf127d5e4a4fbdd5f61bf77bf80f29f94cf5cccfbe56bd"
@@ -174,6 +74,121 @@
             "date": 1747768096979,
             "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-21-05-01-error.log",
             "hash": "28260b6a47dd7e3c015c52317c2ffc2888012dacabf58a9030a0b51743feaf35"
+        },
+        {
+            "date": 1747830426412,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-21-05-18-error.log",
+            "hash": "4cc82213cad589946cc52a55e073e3fdd07d538115aeea80f8625032113c5d2f"
+        },
+        {
+            "date": 1747833139577,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-21-05-19-error.log",
+            "hash": "e012513844af794916d2c6a1054ab5aa895e3f490b620be4ab357b832f869d64"
+        },
+        {
+            "date": 1747836010663,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-21-05-20-error.log",
+            "hash": "677a2def1e3302d9aaa825ad8c772e03bb845f15c0de7916cb83b02464c9af89"
+        },
+        {
+            "date": 1747844439581,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-21-05-22-error.log",
+            "hash": "50e4770606314bd3d9044ccee926a0de85c321b4d3aef0c10c210e733bf01539"
+        },
+        {
+            "date": 1747883480337,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-09-error.log",
+            "hash": "7c64d0aa7dcc06244f545bf08e3d9166530387f91db8f14ccde5efc5763f2642"
+        },
+        {
+            "date": 1747896470518,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-12-error.log",
+            "hash": "963a5c18f41d3b6e0da3e4fdfcdb0b091f9aecfc1222350d0556bc43815a86fc"
+        },
+        {
+            "date": 1747897279382,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-13-error.log",
+            "hash": "c1c476e5914bc17cc11075eddc0b05d2cc39c3e99c46acb60f22d29ecc08f53e"
+        },
+        {
+            "date": 1747905744367,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-15-error.log",
+            "hash": "3728d320d2863a9959929e54b91b0c06f853a9905ed0420c24d5104fa2d98c41"
+        },
+        {
+            "date": 1747921036623,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-19-error.log",
+            "hash": "adfc11855fdde36b1f53f0a18bd8d37141fd586a7eb3fdd1ac19b7b205550650"
+        },
+        {
+            "date": 1747926668302,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-22-05-21-error.log",
+            "hash": "682cd9ce38c5295b16fad2db468e27108cd12757b1f680de12ee45990c79044a"
+        },
+        {
+            "date": 1747973712459,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-23-05-10-error.log",
+            "hash": "b6707f3a13a119535c5c0b068624dfbf2e326f9e91dd8ac5d4fdb03e4a378063"
+        },
+        {
+            "date": 1747980643123,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-23-05-12-error.log",
+            "hash": "bb1e05d616c986f4959b647af20e3ddf827940c83b553b4a24c2a939bf7b1b2c"
+        },
+        {
+            "date": 1748018118691,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-23-05-22-error.log",
+            "hash": "2c28ebaf5d38ddf4bdded05d6f1cd1924f5dec0d156f6e8ee050699329d78a8f"
+        },
+        {
+            "date": 1748058042935,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-24-05-09-error.log",
+            "hash": "a95dfd76437fcdbea6538d4131f53ef20a6da5b1aaef5ec3dc0bfddf3253cdee"
+        },
+        {
+            "date": 1748513671512,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-29-05-16-error.log",
+            "hash": "b703d813484f72d5a16f9b9f871a9a031b4f7f2b4c9a369e48a6359e186f9187"
+        },
+        {
+            "date": 1748536525668,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-29-05-22-error.log",
+            "hash": "71a3e4d4c6fa80173e10825942413613db7380bfc4ac869f294fee25e5fc4282"
+        },
+        {
+            "date": 1748538829005,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-29-05-23-error.log",
+            "hash": "99fc59b599d6071ef0b5e37c1f975b0b3d434c6eb586a0cccd8b02e86d185b4a"
+        },
+        {
+            "date": 1748661936014,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-09-error.log",
+            "hash": "ec20fb9970cfa0e9dd909394eff542ce87a90e43a79d34c123093ba63d802b98"
+        },
+        {
+            "date": 1748669731211,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-11-error.log",
+            "hash": "e14fc4576c9761b4f4219ac8df567196c37b9a6d8710d8c40421d67cab77acbc"
+        },
+        {
+            "date": 1748671336616,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-12-error.log",
+            "hash": "58c08ace75902654f7dce786516f364ab5c57a37ebbef01c4958d560a91e0b37"
+        },
+        {
+            "date": 1748675027816,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-13-error.log",
+            "hash": "526f69c05519dfae7858657e18a4c148ce803bb9a710b485833c95a6574e927d"
+        },
+        {
+            "date": 1748681630676,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-14-error.log",
+            "hash": "1d4f60e0a15558b5d3e0887b3e641536f75eddcbee8c2f99ddb40bcfadb8d3cb"
+        },
+        {
+            "date": 1748683361372,
+            "name": "D:\\Shadi Mubarak\\Shadi_Mubarak_Backend\\logs\\winston\\errors\\shadi-mubarak-2025-31-05-15-error.log",
+            "hash": "8ead9233b72f055411b53ab1723fd6d1da406e4159117a102e111681daacbbb6"
         }
     ],
     "hashType": "sha256"

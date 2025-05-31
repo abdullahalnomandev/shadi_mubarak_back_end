@@ -28,6 +28,16 @@ router.get(
   UserLikedListController.getAllLikedList
 );
 
+router.get(
+  '/get-all-liked-list/:likedPersonBioNo',
+  auth(
+    ENUM_USER_ROLE.USER,
+    ENUM_USER_ROLE.SUPER_ADMIN,
+    ENUM_USER_ROLE.ADMIN
+),
+  UserLikedListController.getOneLikedList
+);
+
 router.delete(
   '/delete-liked-list/:id',
   auth(

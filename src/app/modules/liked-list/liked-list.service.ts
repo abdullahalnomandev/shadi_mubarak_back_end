@@ -7,11 +7,11 @@ import { UserLikedList } from './liked-list.model';
 
 const createOne = async (
   userId: string,
-  likedPersonId: string
+  likedPersonBioNo: string
 ): Promise<IUserLikedList> => {
   return await UserLikedList.create({
     userId,
-    likedPersonId,
+    likedPersonBioNo,
   });
 };
 
@@ -34,8 +34,8 @@ const getAllLikedList = async (
     {
       $lookup: {
         from: 'users', // Assuming the collection name for users is 'users'
-        localField: 'likedPersonId',
-        foreignField: '_id',
+        localField: 'likedPersonBioNo',
+        foreignField: 'bioDataNo',
         as: 'likedPerson',
       },
     },
@@ -86,8 +86,13 @@ const deleteLikedList = async (id: string): Promise<IUserLikedList | null> => {
   return await UserLikedList.findByIdAndDelete(id);
 };
 
+const getOneLikedList = async ({userId,likedPersonBioNo}: {userId:string,likedPersonBioNo:string}): Promise<IUserLikedList | null> => {
+    return await UserLikedList.findOne({userId,likedPersonBioNo}).lean();
+};
+
 export const UserLikedListService = {
   createOne,
   getAllLikedList,
   deleteLikedList,
+  getOneLikedList
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Response, Request } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
@@ -41,7 +42,9 @@ const getALlBioData = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleBioData = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await BioDataService.getBioDataById(id);
+  const userId = req.query.userId ? String(req.query.userId) : undefined;
+
+  const result = await BioDataService.getBioDataById({id,userId});
   sendResponse<IBiodata>(res, {
     statusCode: httpStatus.OK,
     status: 'success',

@@ -5,6 +5,8 @@ import { BioDataRoutes } from '../modules/biodata/biodata.route';
 import { UserLikedListRoutes } from '../modules/liked-list/liked-list.route';
 import { PackageRoutes } from '../modules/package/package.route';
 import { PaymentRoutes } from '../modules/payment/payment.route';
+import { PurchaseBioDataRoutes } from '../modules/purchase-biodata/purchase-biodata.route';
+import { DashboardRoutes } from '../modules/dashboard/dashboard.route';
 
 const router = express.Router();
 
@@ -32,6 +34,14 @@ const moduleRoutes = [
     {
         path:"/payment",
         route: PaymentRoutes
+    },
+    {
+        path:"/purchase-biodata",
+        route: PurchaseBioDataRoutes
+    },
+    {
+        path:"/dashboard",
+        route: DashboardRoutes
     }
 ];
 

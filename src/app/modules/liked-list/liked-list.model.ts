@@ -8,9 +8,8 @@ const UserLikedListSchema = new Schema<IUserLikedList, UserLikeModel>(
       ref: 'User',
       required: true,
     },
-    likedPersonId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+    likedPersonBioNo: {
+      type: String,
       required: true,
     },
   },
@@ -19,6 +18,6 @@ const UserLikedListSchema = new Schema<IUserLikedList, UserLikeModel>(
   }
 );
 
-UserLikedListSchema.index({ userId: 1, likedPersonId: 1 }, { unique: true });
+UserLikedListSchema.index({ userId: 1, likedPersonBioNo: 1 }, { unique: true });
 
 export const UserLikedList = model<IUserLikedList, UserLikeModel>('UserLikedList', UserLikedListSchema);

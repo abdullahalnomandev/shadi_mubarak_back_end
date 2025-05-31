@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { paginationHelper } from '../../../helpers/paginationHelper';
 import { SortOrder } from 'mongoose';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -5,6 +6,8 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IBiodata, IBioDataFilters } from './biodata.interface';
 import { BioData } from './biodata.model';
 import { bioDataSearchableFields } from './biodata.constant';
+import { PurchasedBioData } from '../purchase-biodata/purchase-biodata.mode';
+import { User } from '../users/user.model';
 
 const getALlBioData = async (
   filters: IBioDataFilters,
@@ -108,17 +111,45 @@ const getALlBioData = async (
   };
 };
 
-const getBioDataById = async (id: string): Promise<IBiodata | null> => {
+const getBioDataById = async ({
+  id: bioDataNo,
+  userId,
+}: {
+  id: string;
+  userId?: string;
+}): Promise<IBiodata | null> => {
+  
+  let projection: any = { contact: 0 };
+
+  if (userId) {
+    // Perform both lookups in parallel
+    const [purchased, user] = await Promise.all([
+      PurchasedBioData.findOne({
+        biodata_no: bioDataNo,
+        user_id: userId,
+      }).lean(),
+
+      User.findOne({ _id: userId }).select("bioDataNo").lean()
+    ]);
+
+    const isOwner = user?.bioDataNo === bioDataNo;
+    if (purchased && isOwner) {
+      projection = {}; // Allow contact info
+    }
+  }
+
   const result = await BioData.findOneAndUpdate(
-    { bioDataNo: id },
+    { bioDataNo },
     { $inc: { view: 1 } },
     { new: true }
   )
+    .select(projection)
     .lean<IBiodata>()
     .exec();
 
   return result;
 };
+
 
 const getBioDataStep = async (
   bioDataNo: string,

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const userLikedListSchema = z.object({
   body: z.object({
-    likedPersonId: z.string().trim(), 
+    likedPersonBioNo: z.string().trim(), 
   })
 });
 
