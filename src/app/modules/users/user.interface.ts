@@ -13,6 +13,9 @@ export type IUser = {
   isDeleted?: boolean;
   status?: 'active' | 'blocked';
   bioData: Types.ObjectId | IBiodata;
+  provider: 'email' | 'google';
+  emailVerified: boolean;
+  verificationToken?: string;
 };
 
 // export type IUserMethods = {
@@ -26,7 +29,12 @@ export type IUser = {
 export type UserModel = {
   isUserExist(
     email: string
-  ): Promise<Pick<IUser, 'id' | 'email' | 'password' | 'role' | 'bioDataNo'>>;
+  ): Promise<
+    Pick<
+      IUser,
+      'id' | 'email' | 'password' | 'role' | 'bioDataNo' | 'emailVerified'
+    >
+  >;
   isPasswordMatch(
     givenPassword: string,
     savePassword: string

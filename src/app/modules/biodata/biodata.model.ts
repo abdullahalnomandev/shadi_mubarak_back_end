@@ -9,6 +9,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
     view: { type: Number, default: 0 },
     completedSteps: { type: [Number], default: [] },
     isBlocked: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
     profileStatus: {
       type: String,
       enum: [

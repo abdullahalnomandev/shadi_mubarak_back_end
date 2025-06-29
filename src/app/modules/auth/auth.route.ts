@@ -1,9 +1,9 @@
 import express from 'express';
-import { AuthValidationZodSchema } from './auth.validation';
-import { AuthController } from './auth.controller';
-import validateRequest from '../../middlewares/validateRequest';
-import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
+import validateRequest from '../../middlewares/validateRequest';
+import { AuthController } from './auth.controller';
+import { AuthValidationZodSchema } from './auth.validation';
 
 const router = express.Router();
 
@@ -11,6 +11,11 @@ router.post(
   '/login',
   validateRequest(AuthValidationZodSchema.loginZodSchema),
   AuthController.loginUser
+);
+router.post(
+  '/verify',
+  validateRequest(AuthValidationZodSchema.verifiZodSchema),
+  AuthController.verifiUser
 );
 
 router.post(
@@ -25,11 +30,11 @@ router.post(
   AuthController.refreshToken
 );
 
-// router.post(
-//   '/forgot-password',
-//   validateRequest(AuthValidationZodSchema.forgotPasswordZodSchema),
-//   AuthController.forgotPassword
-// )
+router.post(
+  '/forgot-password',
+  validateRequest(AuthValidationZodSchema.forgetPasswordZodSchema),
+  AuthController.forgotPassword
+);
 
 router.post(
   '/reset-password',

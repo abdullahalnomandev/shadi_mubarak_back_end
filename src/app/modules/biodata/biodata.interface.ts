@@ -115,6 +115,7 @@ export type IBiodata = {
   isLived: boolean; // default: false
   completedSteps: number[]; // e.g. [1,2,3,4,5,6]
   isBlocked: boolean;
+  isDeleted: boolean;
   profileStatus?: ProfileStatus;
   education?: EducationalQualifications;
   general_information?: IGeneralInformation;

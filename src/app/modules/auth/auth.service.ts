@@ -1,6 +1,15 @@
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
+import { JwtPayload, Secret } from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
+import { sendEmail } from '../../../shared/sendEmail';
+import { BioData } from '../biodata/biodata.model';
+import { IUser } from '../users/user.interface';
 import { User } from '../users/user.model';
+import { generateUserId, generateVerifyEmailHtml } from '../users/user.utils';
 import {
   IChangePassword,
   ICreateUser,
@@ -8,15 +17,10 @@ import {
   ILoginUserResponse,
   IRefreshTokenResponse,
 } from './auth.interface';
-import { JwtPayload, Secret } from 'jsonwebtoken';
-import config from '../../../config';
-import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import { sendEmail } from '../../../shared/sendEmail';
-import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
-import { generateUserId } from '../users/user.utils';
-import { BioData } from '../biodata/biodata.model';
-import { getUserInfoWithToken } from './auth.util';
+import {
+  generateResetPasswordEmailHtml,
+  getUserInfoWithToken,
+} from './auth.util';
 
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password, token } = payload;
@@ -44,7 +48,11 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   }
 
   // Validate password
-  if ( !token && user.password && !(await User.isPasswordMatch(password as string, user.password))) {
+  if (
+    !token &&
+    user.password &&
+    !(await User.isPasswordMatch(password as string, user.password))
+  ) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
@@ -75,13 +83,16 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     refreshToken,
   };
 };
-const registerUser = async ({
+
+export const registerUser = async ({
   email,
   password,
   phone,
-}: ICreateUser): Promise<ILoginUserResponse> => {
-  // Input validation
-  if (!email || !password || !phone) {
+  provider = 'email',
+}: ICreateUser): Promise<
+  ILoginUserResponse | { message: string; user: Partial<IUser> }
+> => {
+  if (!email || !phone || !password) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Missing required fields');
   }
 
@@ -89,23 +100,22 @@ const registerUser = async ({
   session.startTransaction();
 
   try {
-    // 1. Check if user already exists
-    const existingUser = await User.isUserExist(email);
+    // Step 1: Check if user already exists
+    let existingUser = await User.isUserExist(email);
+    if (existingUser && !existingUser.emailVerified && provider === 'email') {
+      await User.deleteOne({ bioDataNo: existingUser.bioDataNo });
+      await BioData.deleteOne({ bioDataNo: existingUser.bioDataNo });
+      existingUser = null;
+    }
     if (existingUser) {
-      throw new ApiError(
-        httpStatus.CONFLICT,
-        'User already exists with this email'
-      );
+      throw new ApiError(httpStatus.CONFLICT, 'User already exists');
     }
 
-    // 2. Generate unique bioDataNo
+    // Step 2: Generate unique bioData number
     const bioDataNo = await generateUserId();
 
-    // 3. Create BioData document
-    const bioData = await BioData.create([{ bioDataNo }], {
-      session,
-    });
-
+    // Step 3: Create BioData
+    const bioData = await BioData.create([{ bioDataNo }], { session });
     if (!bioData?.[0]) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
@@ -113,33 +123,69 @@ const registerUser = async ({
       );
     }
 
-    // 4. Create User document
-    const newUser = await User.create(
-      [
-        {
-          email,
-          password,
-          phone,
-          bioDataNo,
-          bioData: bioData[0]._id,
-        },
-      ],
-      { session }
-    );
+    // Step 4: Generate verification token for email users
+    const verificationToken =
+      provider === 'email'
+        ? jwtHelpers.createToken(
+            { email, bioDataNo },
+            config.jwt.secret as string,
+            '15m'
+          )
+        : null;
 
-    if (!newUser?.[0]) {
+    // Step 5: Prepare user data
+    const userPayload = {
+      email,
+      password,
+      phone,
+      provider,
+      bioDataNo,
+      bioData: bioData[0]._id,
+      emailVerified: provider === 'google',
+      verificationToken,
+    };
+
+    // Step 6: Create user
+    const createdUser = await User.create([userPayload], { session });
+    if (!createdUser?.[0]) {
       throw new ApiError(
         httpStatus.INTERNAL_SERVER_ERROR,
         'Failed to create user'
       );
     }
 
-    // 5. Generate tokens
+    const savedUser = createdUser[0];
+
+    if (provider === 'email') {
+      const verifyUrl = `${config.client_url}/verify?token=${verificationToken}`;
+      const emailHtml = generateVerifyEmailHtml(verifyUrl);
+
+      // ✅ Commit the transaction before sending email
+      await session.commitTransaction();
+
+      // ✅ Then send the email
+      sendEmail({
+        to: email,
+        subject: 'Verify your account!',
+        html: emailHtml,
+      });
+
+      return {
+        id: savedUser._id,
+        email: savedUser.email,
+        phone: savedUser.phone,
+        provider: savedUser.provider,
+        bioDataNo: savedUser.bioDataNo,
+        emailVerified: savedUser.emailVerified,
+      };
+    }
+
+    // Step 7: Generate tokens for Google users
     const tokenPayload = {
-      id: newUser[0]._id,
+      id: savedUser._id,
       bioDataNo,
       email,
-      role: newUser[0].role,
+      role: savedUser.role,
     };
 
     const accessToken = jwtHelpers.createToken(
@@ -154,7 +200,7 @@ const registerUser = async ({
       config.jwt.refresh_expires_in as string
     );
 
-    // 6. Commit transaction
+    // ✅ Commit transaction for Google users
     await session.commitTransaction();
 
     return {
@@ -172,6 +218,80 @@ const registerUser = async ({
   } finally {
     session.endSession();
   }
+};
+
+const verifyUser = async (token: {
+  token: string;
+}): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> => {
+  if (!token) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Verification token is required'
+    );
+  }
+
+  // Step 1: Verify JWT token
+  let decoded;
+  try {
+    decoded = jwtHelpers.verifiedToken(token, config.jwt.secret as string) as {
+      email: string;
+      bioDataNo: string;
+    };
+  } catch (error) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      'Invalid or expired verification token'
+    );
+  }
+
+  const { email, bioDataNo } = decoded;
+
+  // Step 2: Find and update user atomically
+  const user = await User.findOneAndUpdate(
+    { email, bioDataNo, verificationToken: token },
+    {
+      $set: {
+        emailVerified: true,
+        verificationToken: null,
+      },
+    },
+    { new: true } // returns updated user
+  );
+
+  if (!user) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'User not found or already verified'
+    );
+  }
+
+  // Step 3: Generate access and refresh tokens
+  const tokenPayload = {
+    id: user._id,
+    email: user.email,
+    bioDataNo: user.bioDataNo,
+    role: user.role,
+  };
+
+  const accessToken = jwtHelpers.createToken(
+    tokenPayload,
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string
+  );
+
+  const refreshToken = jwtHelpers.createToken(
+    tokenPayload,
+    config.jwt.refresh_secret as Secret,
+    config.jwt.refresh_expires_in as string
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
@@ -236,45 +356,65 @@ const changePassword = async (
 
 const forgetPassword = async (email: string): Promise<void> => {
   const user = await User.isUserExist(email);
-  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
 
-  const jwtPayload = {
-    id: user.id,
-    role: user.role,
-  };
-
-  const resetToken = jwtHelpers.createToken(
-    jwtPayload,
+  const token = jwtHelpers.createToken(
+    {
+      bioDataNo: user.bioDataNo,
+      role: user.role,
+    },
     config.jwt.secret as string,
-    '10m'
+    '15m'
   );
 
-  const resetUILink = `${config.reset_pass_ui_link}?id=${user.email}&token=${resetToken} `;
-  await sendEmail(user.email, resetUILink);
+  const resetLink = `${config.client_url}/reset-password?token=${token}`;
+  const html = generateResetPasswordEmailHtml(resetLink);
+
+  await sendEmail({
+    to: user.email,
+    subject: 'Reset your password !',
+    html,
+  });
 };
 
 const resetPassword = async (
-  payload: { email: string; password: string },
+  newPassword: string,
   token: string
 ): Promise<void> => {
-  const user = await User.isUserExist(payload.email);
-  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
-
   const decoded = jwtHelpers.verifiedToken(token, config.jwt.secret as Secret);
-  if (!decoded) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid token');
+
+  if (!decoded || !decoded.bioDataNo) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid or expired token');
   }
 
-  const newHasPassword = await bcrypt.hashSync(
-    user.password,
+  // Check if user exists by bioDataNo
+  const user = await User.findOne({ bioDataNo: decoded.bioDataNo });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if user is deleted
+  const bioData = await BioData.findOne(
+    { bioDataNo: decoded.bioDataNo },
+    'isDeleted'
+  ).lean();
+
+  if (bioData?.isDeleted) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Hash the new password
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
     Number(config.bcrypt_salt_round)
   );
 
-  await User.findOneAndUpdate(
-    { id: decoded.id },
-    {
-      password: newHasPassword,
-    }
+  // Update user password
+  await User.updateOne(
+    { bioDataNo: decoded.bioDataNo },
+    { password: newHashedPassword }
   );
 };
 
@@ -285,4 +425,5 @@ export const Authservice = {
   changePassword,
   forgetPassword,
   resetPassword,
+  verifyUser,
 };

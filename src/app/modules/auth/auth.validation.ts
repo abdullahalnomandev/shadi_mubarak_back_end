@@ -31,6 +31,14 @@ const registerZodSchema = z.object({
     }),
   }),
 });
+
+const verifiZodSchema = z.object({
+  body: z.object({
+    verificationToken: z.string({
+      required_error: 'verificationToken is required',
+    }),
+  }),
+});
 const refreshTokenZodSchema = z.object({
   cookies: z.object({
     refreshToken: z.string({
@@ -72,4 +80,5 @@ export const AuthValidationZodSchema = {
   resetPasswordZodSchema,
   registerZodSchema,
   forgetPasswordZodSchema,
+  verifiZodSchema,
 };

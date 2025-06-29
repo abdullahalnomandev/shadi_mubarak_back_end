@@ -11,6 +11,7 @@ import { errorLogger } from "../../shared/logger";
 import { ZodError } from "zod";
 import handleZodError from "../../errors/handleZodError";
 import handleCastError from "../../errors/handleCastError";
+import handleDuplicateError from "../../errors/handleDuplicateError";
 
 const globalErrorHandler:ErrorRequestHandler = (error ,req:Request, res:Response, next:NextFunction) => {
 
@@ -37,6 +38,12 @@ const globalErrorHandler:ErrorRequestHandler = (error ,req:Request, res:Response
         const simplifiedError = handleCastError(error);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
+    }
+    else if (error?.code === 11000) {
+        const simplifiedError = handleDuplicateError(error);
+        statusCode = simplifiedError?.statusCode;
+        message = simplifiedError?.message;
         errorMessages = simplifiedError.errorMessages;
     }
     else if (error?.name === 'TokenExpiredError') {

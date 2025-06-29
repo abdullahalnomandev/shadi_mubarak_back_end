@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { Schema, model } from 'mongoose';
-import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
+import { Schema, model } from 'mongoose';
 import config from '../../../config';
 import { ENUM_USER_ROLE } from '../../../enums/user';
+import { IUser, UserModel } from './user.interface';
 
 const UserSchema = new Schema<IUser, UserModel>(
   {
@@ -23,6 +23,9 @@ const UserSchema = new Schema<IUser, UserModel>(
       select: false,
       required: [true, 'phone is required'],
     },
+    provider: { type: String, enum: ['email', 'google'], default: 'email' },
+    emailVerified: { type: Boolean, default: false },
+    verificationToken: { type: String, default: '' },
     role: {
       type: String,
       enum: [
@@ -47,12 +50,12 @@ const UserSchema = new Schema<IUser, UserModel>(
 
 UserSchema.static('isUserExist', async function (email: string): Promise<Pick<
   IUser,
-  'email' | 'password' | 'bioDataNo' | 'role'
+  'email' | 'password' | 'bioDataNo' | 'role' | 'emailVerified'
 > | null> {
   return await User.findOne(
     { email },
-    { email: 1, password: 1, role: 1, bioDataNo: 1 }
-  );
+    { email: 1, password: 1, role: 1, bioDataNo: 1, emailVerified: 1 }
+  ).lean();
 });
 
 UserSchema.static(
