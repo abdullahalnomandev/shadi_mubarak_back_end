@@ -25,53 +25,60 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
 
     education: {
       type: {
-        // SSC
-        ssc_passing_year: {
-          type: Number,
-        },
-        ssc_group: {
-          type: String,
-          enum: ['Science', 'Commerce', 'Arts', 'Other'],
-        },
-        ssc_result: {
-          type: String,
-          enum: ['A+', 'A', 'A-', 'B', 'C', 'D'],
-        },
+        // System and Qualification
+        education_system: { type: String },
+        highest_qualification: { type: String },
 
-        // HSC
-        hsc_passing_year: {
-          type: Number,
-        },
-        hsc_group: {
-          type: String,
-          enum: ['Science', 'Commerce', 'Arts', 'Other'],
-        },
-        hsc_result: {
-          type: String,
-          enum: ['A+', 'A', 'A-', 'B', 'C', 'D'],
-        },
+        // SSC / Dakhil / Equivalent
+        passing_year_ssc: { type: Number },
+        group_ssc: { type: String },
+        result_ssc: { type: String },
+
+        // Post SSC Medium
+        post_ssc_medium: { type: String }, // "hsc" or "diploma"
+
+        // HSC / Alim / Equivalent
+        passing_year_hsc: { type: Number },
+        group_hsc: { type: String },
+        result_hsc: { type: String },
 
         // Diploma
-        diploma_subject: {
-          type: String,
-        },
-        diploma_institution: {
-          type: String,
-        },
-        diploma_passing_year: {
-          type: Number,
-        },
+        diploma_subject: { type: String },
+        diploma_institution: { type: String },
+        diploma_passing_year: { type: Number },
+        diploma_current_study_year: { type: String }, // Only if ongoing
 
         // Graduation
-        graduation_subject: {
-          type: String,
-        },
-        graduation_institution: {
-          type: String,
-        },
-        graduation_year: {
-          type: String,
-        },
+        graduation_subject: { type: String },
+        graduation_institution: { type: String },
+        graduation_year: { type: Number },
+
+        // Post Graduation
+        postgraduation_subject: { type: String },
+        postgraduation_institution: { type: String },
+        postgraduation_year: { type: Number },
+
+        // Doctorate
+        doctorate_subject: { type: String },
+        doctorate_institution: { type: String },
+        doctorate_year: { type: Number },
+
+        // Below SSC (for C level)
+        below_ssc: { type: String }, // class_3 to class_10
+
+        // Quami / Madrasha
+        madrasha_name: { type: String },
+        result: { type: String },
+        passing_year: { type: Number },
+
+        // Takmil & Takhassus (only for level G)
+        takmil_madrasha_name: { type: String },
+        takmil_result: { type: String },
+        takmil_passing_year: { type: Number },
+
+        takhassus_madrasha_name: { type: String },
+        takhassus_result: { type: String },
+        takhassus_passing_year: { type: Number },
       },
       required: false,
     },
@@ -88,13 +95,42 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
       },
       required: false,
     },
-
     marriage_related_information: {
       type: {
-        doYouAgreeWithParents: String,
-        willingToWorkAfterMarriage: String,
-        wantToContinueStudyAfterMarriage: String,
-        whyAreYouGettingMarried: String,
+        doParentsAgree: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
+        reasonForMarriage: {
+          type: String,
+          required: true,
+        },
+        // Male-specific fields
+        canKeepWifeInVeil: {
+          type: String,
+        },
+        allowWifeToStudy: {
+          type: String,
+          enum: ['yes', 'no'],
+        },
+        allowWifeToWork: {
+          type: String,
+          enum: ['yes', 'no'],
+        },
+        residenceAfterMarriage: {
+          type: String,
+        },
+        expectGiftsFromBrideFamily: {
+          type: String,
+        },
+        // Female-specific fields
+        willingToWorkAfterMarriage: {
+          type: String,
+        },
+        continueStudiesAfterMarriage: {
+          type: String,
+        },
       },
       required: false,
     },
@@ -118,21 +154,46 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
     },
     personal_information: {
       type: {
-        clothingOutside: { type: String },
+        usualOutdoorClothing: { type: String, required: true },
+        beardAccordingToSunnah: {
+          type: String,
+          enum: ['yes', 'no'],
+        },
+        clothingAboveAnkles: {
+          type: String,
+          enum: ['yes', 'no'],
+        },
+        wearsNiqab: {
+          type: String,
+          enum: ['yes', 'no'],
+        },
         wearingNiqabSince: { type: String },
-        praysFiveTimes: { type: Boolean },
-        missedPrayersPerWeek: { type: String },
-        compliesWithMahram: { type: Boolean },
-        canReciteQuranCorrectly: { type: Boolean },
+        dailyPrayerRoutine: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
+        skippedPrayersPerWeek: { type: String },
+        followsMahramGuidelines: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
+        quranRecitationAbility: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
         fiqhFollowed: { type: String },
-        watchesOrListensToMedia: { type: String },
-        mentalOrPhysicalDiseases: String,
-        involvedInSpecialWork: String,
+        mediaConsumptionHabits: { type: String },
+        mentalOrPhysicalDiseases: { type: String },
+        involvedInSpecialWork: { type: String },
         beliefsAboutShrine: { type: String, required: true },
-        islamicBooksRead: [String],
+        islamicBooksRead: { type: String },
         islamicScholarsPreferred: [String],
-        hobbiesAndInterests: [String],
-        mobileNumber: { type: String, required: true },
+        hobbiesAndInterests: { type: String },
+        groomMobileNumber: { type: String },
+        previousRelationship: { type: String },
       },
       required: false,
     },
@@ -182,7 +243,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
     expected_partner: {
       type: {
         age: {
-          type: [Number],
+          type: String,
           required: true,
         },
         complexion: {
@@ -205,10 +266,19 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
 
     agreement: {
       type: {
-        parentsAwareOfRegistration: { type: Boolean, required: true },
-        confirmTruthOfProvidedInformation: { type: Boolean, required: true },
+        parentsAwareOfRegistration: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
+        confirmTruthOfProvidedInformation: {
+          type: String,
+          enum: ['yes', 'no'],
+          required: true,
+        },
         agreeToLegalResponsibilityForFalseInfo: {
-          type: Boolean,
+          type: String,
+          enum: ['yes', 'no'],
           required: true,
         },
       },

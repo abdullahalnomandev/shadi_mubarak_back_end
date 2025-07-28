@@ -45,13 +45,12 @@ type Occupation = {
 };
 
 type Agreement = {
-  parentsAwareOfRegistration: boolean;
-  confirmTruthOfProvidedInformation: boolean;
-  agreeToLegalResponsibilityForFalseInfo: boolean;
+  parentsAwareOfRegistration: string;
+  confirmTruthOfProvidedInformation: string;
+  agreeToLegalResponsibilityForFalseInfo: string;
 };
-
 type ExpectedPartner = {
-  age: number[]; // ex: 18-25, 26-30, 31-35, 36-40
+  age: string; // ex: 18-25, 26-30, 31-35, 36-40
   complexion: string[]; // e.g. ["Fair", "Light", "Dark"]
   height: string;
   education: string;
@@ -60,6 +59,7 @@ type ExpectedPartner = {
   profession: string;
   financialCondition: string;
   specialExpectationsOrRequests?: string; // optional in case it's not always provided
+  educationalQualification?: string;
 };
 type Contact = {
   brideName: string;
@@ -68,46 +68,116 @@ type Contact = {
   emailUsedForRegistration: string;
 };
 type PersonalInformation = {
-  clothingOutside: string; // e.g. "Abaya and Niqab", "Hijab only", etc.
+  usualOutdoorClothing: string; // e.g. "Abaya and Niqab", "Hijab only", etc.
+  beardAccordingToSunnah?: 'yes' | 'no'; // For male candidates
+  clothingAboveAnkles?: 'yes' | 'no'; // For male candidates
+  wearsNiqab?: 'yes' | 'no'; // For female candidates
   wearingNiqabSince: string; // e.g. "2015", "Since childhood", or "Not applicable"
-  praysFiveTimes: boolean;
-  missedPrayersPerWeek: string; // how many times Salah is missed per week
-  compliesWithMahram: boolean; // e.g. doesn’t travel without mahram
-  canReciteQuranCorrectly: boolean;
-  fiqhFollowed: string; // e.g. "Hanafi", "Shafi'i", etc.
-  watchesOrListensToMedia: string; // freeform or enum e.g. "No", "Sometimes", "Only Islamic content"
-  mentalOrPhysicalDiseases?: string; // optional in case of none
-  involvedInSpecialWork?: string; // e.g. "Da'wah", "Teaching", "Volunteering"
+  dailyPrayerRoutine: 'yes' | 'no';
+  skippedPrayersPerWeek: string; // how many times Salah is missed per week
+  followsMahramGuidelines: 'yes' | 'no'; // e.g. doesn't travel without mahram
+  quranRecitationAbility: 'yes' | 'no';
+  fiqhFollowed: string;
+  mediaConsumptionHabits: string; // freeform or enum e.g. "No", "Sometimes", "Only Islamic content"
+  mentalOrPhysicalDiseases: string;
+  involvedInSpecialWork: string; // e.g. "Da'wah", "Teaching", "Volunteering"
   beliefsAboutShrine: string; // freeform opinion on mazar/dargah etc.
-  islamicBooksRead: string[]; // list of books
-  islamicScholarsPreferred: string[]; // list of scholars
-  hobbiesAndInterests: string[]; // e.g. ["Reading", "Writing", "Cooking"]
-  mobileNumber: string;
+  islamicBooksRead: string; // comma-separated list of books
+  islamicScholarsPreferred: string[]; // list of preferred scholars from predefined options
+  hobbiesAndInterests: string; // freeform text about interests and preferences
+  groomMobileNumber: string; // format: +8801XXXXXXXXX
+  previousRelationship: string; // description of any past relationships
 };
 
 type MarriageRelatedInformation = {
-  doYouAgreeWithParents: boolean;
-  willingToWorkAfterMarriage: boolean;
-  wantToContinueStudyAfterMarriage: boolean;
-  whyAreYouGettingMarried: string;
+  // Common fields for both male and female
+  doParentsAgree: 'yes' | 'no';
+  reasonForMarriage: string;
+
+  // Male-specific fields
+  canKeepWifeInVeil?: string;
+  allowWifeToStudy?: 'yes' | 'no';
+  allowWifeToWork?: 'yes' | 'no';
+  residenceAfterMarriage?: string;
+  expectGiftsFromBrideFamily?: string;
+
+  // Female-specific fields
+  willingToWorkAfterMarriage?: string;
+  continueStudiesAfterMarriage?: string;
 };
 
-type EducationalQualifications = {
-  educationMedium: string; // e.g. "Bangla Medium", "English Medium", "Madrasa"
-  sscPassingYear: number;
-  sscDepartment: string;
-  sscResult: string; // Can be "5.00", "A+", "GPA 4.5", etc.
+type EducationSystem = 'general' | 'alia' | 'quami';
 
-  hscPassingYear?: number;
-  hscDepartment?: string;
-  hscResult?: string;
+type HighestQualification =
+  | 'A' // HSC / Primary Islamic / etc
+  | 'B' // SSC / Ibtidaiyah / etc
+  | 'C' // Below SSC / Mutawassitah
+  | 'D' // Diploma / Sanabia Uliya
+  | 'E' // Diploma (Ongoing) / Fazilat
+  | 'F' // Undergraduate / Takmil
+  | 'G' // Graduate / Takhassus
+  | 'H' // Postgraduate
+  | 'I'; // Doctorate
 
-  honorsSubject?: string;
-  institutionName?: string;
-  currentYearOfStudy?: string; // e.g. "2nd year", "Honours Final Year"
+type ResultOption = string; // "A+", "B", "Mumtaz", etc. — you can refine later if you want
 
-  otherEducation?: string; // for diploma, short courses, etc.
-};
+type GroupOption = string; // "science", "commerce", "arts", "vocational", etc.
+
+interface EducationalQualifications {
+  education_system: EducationSystem;
+  highest_qualification: HighestQualification;
+
+  // SSC / Dakhil / Equivalent
+  passing_year_ssc?: number;
+  group_ssc?: GroupOption;
+  result_ssc?: ResultOption;
+
+  // Post SSC Medium
+  post_ssc_medium?: 'hsc' | 'diploma';
+
+  // HSC / Alim / Equivalent
+  passing_year_hsc?: number;
+  group_hsc?: GroupOption;
+  result_hsc?: ResultOption;
+
+  // Diploma
+  diploma_subject?: string;
+  diploma_institution?: string;
+  diploma_passing_year?: number;
+  diploma_current_study_year?: string;
+
+  // Graduation
+  graduation_subject?: string;
+  graduation_institution?: string;
+  graduation_year?: number;
+
+  // Post Graduation
+  postgraduation_subject?: string;
+  postgraduation_institution?: string;
+  postgraduation_year?: number;
+
+  // Doctorate
+  doctorate_subject?: string;
+  doctorate_institution?: string;
+  doctorate_year?: number;
+
+  // Below SSC (for C level)
+  below_ssc?: string;
+
+  // Quami / Madrasha
+  madrasha_name?: string;
+  result?: ResultOption;
+  passing_year?: number;
+
+  // Takmil & Takhassus (only for level G)
+  takmil_madrasha_name?: string;
+  takmil_result?: ResultOption;
+  takmil_passing_year?: number;
+
+  takhassus_madrasha_name?: string;
+  takhassus_result?: ResultOption;
+  takhassus_passing_year?: number;
+}
 
 export type IBiodata = {
   bioDataNo: string;
