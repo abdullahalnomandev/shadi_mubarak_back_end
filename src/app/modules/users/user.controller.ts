@@ -49,6 +49,18 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const { bioDataNo } = req.user;
+  const result = await UserService.getMe(bioDataNo);
+
+  sendResponse<IUser>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'user retrieved successfully',
+    data: result,
+  });
+});
+
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const updateData = req.body;
@@ -80,4 +92,5 @@ export const UserController = {
   getSingleUser,
   updateUser,
   deleteUser,
+  getMe,
 };

@@ -1,10 +1,10 @@
 import { Model } from 'mongoose';
 
 type IGeneralInformation = {
-  gender: string;
+  biodataType: string;
   dateOfBirth: string;
   height: string;
-  weight: number;
+  weight: string;
   skin: string;
   nationality: string;
   maritalStatus: 'Single' | 'Married' | 'Divorced' | 'Widowed';

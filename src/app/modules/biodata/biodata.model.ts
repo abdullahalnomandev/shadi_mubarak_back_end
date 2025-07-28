@@ -78,10 +78,10 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
 
     general_information: {
       type: {
-        gender: String,
+        biodataType: String,
         dateOfBirth: Date,
         height: String,
-        weight: Number,
+        weight: String,
         skin: String,
         nationality: String,
         maritalStatus: String,

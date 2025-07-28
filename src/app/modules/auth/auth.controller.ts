@@ -90,7 +90,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
   const { ...passwordData } = req.body;
-  const user = req.user;
+  const user = req.user?.userEmail;
   await Authservice.changePassword(user, passwordData);
 
   sendResponse<ILoginUserResponse>(res, {

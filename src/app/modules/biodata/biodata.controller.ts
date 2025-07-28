@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Response, Request } from 'express';
-import catchAsync from '../../../shared/catchAsync';
-import sendResponse from '../../../shared/sendResponse';
+import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { paginationFields } from '../../../constants/pagination';
+import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
+import sendResponse from '../../../shared/sendResponse';
+import { bioDataFilterableFields } from './biodata.constant';
 import { IBiodata } from './biodata.interface';
 import { BioDataService } from './biodata.service';
-import pick from '../../../shared/pick';
-import { bioDataFilterableFields } from './biodata.constant';
-import { paginationFields } from '../../../constants/pagination';
 // import pick from '../../../shared/pick';
 // import { bioDataFilterableFields } from './biodata.constant';
 // import { paginationFields } from '../../../constants/pagination';
@@ -42,9 +42,11 @@ const getALlBioData = catchAsync(async (req: Request, res: Response) => {
 
 const getSingleBioData = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = req.query.userId ? String(req.query.userId) : undefined;
+  const userId = req?.user?.id;
 
-  const result = await BioDataService.getBioDataById({id,userId});
+  console.log({ userId });
+
+  const result = await BioDataService.getBioDataById({ id, userId });
   sendResponse<IBiodata>(res, {
     statusCode: httpStatus.OK,
     status: 'success',
@@ -64,9 +66,35 @@ const getDetailsByStep = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const { bioDataNo } = req.user;
+  const payload = req.body;
+  const result = await BioDataService.updateProfile(bioDataNo, payload);
+  sendResponse<IBiodata>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData updated successfully',
+    data: result,
+  });
+});
+
+const deleteBioData = catchAsync(async (req: Request, res: Response) => {
+  const { bioDataNo } = req.user;
+  const result = await BioDataService.deleteBioData(bioDataNo);
+  sendResponse<IBiodata>(res, {
+    statusCode: httpStatus.OK,
+    status: 'success',
+    message: 'BioData deleted successfully',
+    data: result,
+  });
+});
+
 export const BioDataController = {
   updateBioData,
   getALlBioData,
   getDetailsByStep,
   getSingleBioData,
+  updateProfile,
+  deleteBioData,
 };

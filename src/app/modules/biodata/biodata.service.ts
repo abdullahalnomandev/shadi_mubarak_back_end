@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { paginationHelper } from '../../../helpers/paginationHelper';
 import { SortOrder } from 'mongoose';
-import { IPaginationOptions } from '../../../interfaces/pagination';
+import { paginationHelper } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
-import { IBiodata, IBioDataFilters } from './biodata.interface';
-import { BioData } from './biodata.model';
-import { bioDataSearchableFields } from './biodata.constant';
+import { IPaginationOptions } from '../../../interfaces/pagination';
 import { PurchasedBioData } from '../purchase-biodata/purchase-biodata.mode';
 import { User } from '../users/user.model';
+import { bioDataSearchableFields } from './biodata.constant';
+import { IBiodata, IBioDataFilters } from './biodata.interface';
+import { BioData } from './biodata.model';
 
 const getALlBioData = async (
   filters: IBioDataFilters,
@@ -118,23 +118,23 @@ const getBioDataById = async ({
   id: string;
   userId?: string;
 }): Promise<IBiodata | null> => {
-  
   let projection: any = { contact: 0 };
 
   if (userId) {
-    // Perform both lookups in parallel
+    // Do the two look‑ups in parallel
     const [purchased, user] = await Promise.all([
-      PurchasedBioData.findOne({
+      PurchasedBioData.exists({
         biodata_no: bioDataNo,
         user_id: userId,
-      }).lean(),
-
-      User.findOne({ _id: userId }).select("bioDataNo").lean()
+      }),
+      User.findById(userId).select('bioDataNo').lean(),
     ]);
 
-    const isOwner = user?.bioDataNo === bioDataNo;
-    if (purchased && isOwner) {
-      projection = {}; // Allow contact info
+    const isOwner = user?.bioDataNo?.toString() === bioDataNo?.toString(); // avoid ObjectId vs string mismatch
+
+    // 👉 Allow contact info if **either** the user owns the biodata OR has purchased it
+    if (purchased || isOwner) {
+      projection = {}; // no fields excluded
     }
   }
 
@@ -143,13 +143,12 @@ const getBioDataById = async ({
     { $inc: { view: 1 } },
     { new: true }
   )
-    .select(projection)
+    .select(projection) // hides contact unless allowed
     .lean<IBiodata>()
     .exec();
 
   return result;
 };
-
 
 const getBioDataStep = async (
   bioDataNo: string,
@@ -224,9 +223,55 @@ const updateBioData = async (
   return result;
 };
 
+// {
+//   profileStatus: 'verified',
+//   completedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+// }
+const updateProfile = async (
+  bioDataNo: string,
+  payload: Partial<IBiodata>
+): Promise<IBiodata | null> => {
+  const result = await BioData.findOneAndUpdate(
+    { bioDataNo },
+    { $set: payload },
+    { new: true }
+  );
+  return result?.profileStatus;
+};
+
+const deleteBioData = async (bioDataNo: string): Promise<IBiodata | null> => {
+  const resetPayload: Partial<IBiodata> = {
+    profileStatus: 'not_started',
+    completedSteps: [],
+    view: 0,
+    isBlocked: false,
+    isDeleted: false,
+    // optionally reset others
+    education: {},
+    general_information: {},
+    marriage_related_information: {},
+    address: {},
+    personal_information: {},
+    family_information: {},
+    occupation: {},
+    expected_partner: {},
+    agreement: {},
+    contact: {},
+  };
+
+  const result = await BioData.findOneAndUpdate(
+    { bioDataNo },
+    { $set: resetPayload },
+    { new: true }
+  );
+  return result;
+};
+
 export const BioDataService = {
   getALlBioData,
   getBioDataStep,
   getBioDataById,
   updateBioData,
+  updateProfile,
+  deleteBioData,
 };

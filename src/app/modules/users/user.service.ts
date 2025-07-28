@@ -143,10 +143,23 @@ const deleteUserById = async (id: string): Promise<IUser | null> => {
   return await User.findByIdAndDelete(id);
 };
 
+const getMe = async (bioDataNo: string): Promise<IUser | null> => {
+  return await User.findOne(
+    { bioDataNo },
+    { _id: 1, name: 1, email: 1, bioData: 1 }
+  )
+    .populate({
+      path: 'bioData',
+      select: 'bioDataNo isLived view completedSteps profileStatus',
+    })
+    .lean();
+};
+
 export const UserService = {
   createUser,
   getAllUsers,
   getUserById,
   updateUserById,
   deleteUserById,
+  getMe,
 };

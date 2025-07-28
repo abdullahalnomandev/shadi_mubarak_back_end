@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
-import { JwtPayload, Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
@@ -57,9 +57,9 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   }
 
   // Extract user data for token generation
-  const { id, bioDataNo, role } = user;
+  const { _id, bioDataNo, role } = user;
   const tokenPayload = {
-    id,
+    id: _id,
     bioDataNo,
     userEmail,
     role,
@@ -331,23 +331,20 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 const changePassword = async (
-  userData: JwtPayload | null,
+  email: string,
   payload: IChangePassword
 ): Promise<void> => {
   const { oldPassword, newPassword } = payload;
-
-  const isUserExist = await User.findOne({ email: userData?.email }).select(
-    '+password'
-  );
-  if (!isUserExist)
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
-
+  const isUserExist = await User.findOne({ email }).select('password');
   // checking old password
   if (
     isUserExist &&
     !(await User.isPasswordMatch(oldPassword, isUserExist.password))
   ) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, ' Old password is incorrect');
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      ' Current password is incorrect'
+    );
   }
 
   isUserExist.password = newPassword;
