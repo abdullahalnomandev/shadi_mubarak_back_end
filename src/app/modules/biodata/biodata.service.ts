@@ -13,20 +13,71 @@ const getALlBioData = async (
   filters: IBioDataFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBiodata[]>> => {
-  const { searchTerm, minAge, maxAge, minHeight, maxHeight, ...otherFilters } =
-    filters;
+  const {
+    searchTerm,
+    minAge,
+    maxAge,
+    bioDataNo,
+    presentAddress: rawPresentAddress,
+    permanentAddress: rawPermanentAddress,
+    ...otherFilters
+  } = filters;
 
-  // 1) Build the base filter object
+  const presentAddress = rawPresentAddress === 'all' ? '' : rawPresentAddress;
+  const permanentAddress =
+    rawPermanentAddress === 'all' ? '' : rawPermanentAddress;
+  console.log({ presentAddress, permanentAddress });
+
   const query: Record<string, unknown> = {};
 
-  // 1a) Text‐search across multiple fields
+  // 1. Search term in multiple fields including addresses
   if (searchTerm) {
-    query.$or = bioDataSearchableFields.map(field => ({
+    const searchableFields = [
+      ...bioDataSearchableFields,
+      'address.present_address.full',
+      'address.permanent_address.full',
+    ];
+
+    query.$or = searchableFields.map(field => ({
       [field]: { $regex: searchTerm, $options: 'i' },
     }));
   }
 
-  // 1b) Age range filter
+  // 2. Filter both present & permanent address if both are provided
+  if (presentAddress && permanentAddress) {
+    query.$and = [
+      {
+        'address.present_address.full': {
+          $regex: presentAddress,
+          $options: 'i',
+        },
+      },
+      {
+        'address.permanent_address.full': {
+          $regex: permanentAddress,
+          $options: 'i',
+        },
+      },
+    ];
+  } else if (presentAddress) {
+    query['address.present_address.full'] = {
+      $regex: presentAddress,
+      $options: 'i',
+    };
+  } else if (permanentAddress) {
+    query['address.permanent_address.full'] = {
+      $regex: permanentAddress,
+      $options: 'i',
+    };
+  }
+  // 3. Handle bioDataNo (add SM- if needed)
+  if (bioDataNo) {
+    query.bioDataNo = bioDataNo.startsWith('SM-')
+      ? bioDataNo
+      : `SM-${bioDataNo}`;
+  }
+
+  // 4. Age range filter
   if (minAge || maxAge) {
     const today = new Date();
     const dateQuery: Record<string, Date> = {};
@@ -36,8 +87,8 @@ const getALlBioData = async (
         today.getFullYear() - Number(maxAge),
         today.getMonth(),
         today.getDate()
-      );
-      dateQuery.$gte = minDate;
+      ).toISOString();
+      dateQuery.$gte = new Date(minDate);
     }
 
     if (minAge) {
@@ -45,32 +96,21 @@ const getALlBioData = async (
         today.getFullYear() - Number(minAge),
         today.getMonth(),
         today.getDate()
-      );
-      dateQuery.$lte = maxDate;
+      ).toISOString();
+      dateQuery.$lte = new Date(maxDate);
     }
-    query['generalInformation.dateOfBirth'] = dateQuery;
-  }
-  // 1c) Height range filter
-  if (minHeight || maxHeight) {
-    const heightQuery: Record<string, number> = {};
 
-    if (maxHeight) {
-      heightQuery.$lte = Number(maxHeight);
-    }
-    if (minHeight) {
-      heightQuery.$gte = Number(minHeight);
-    }
-    query['generalInformation.height'] = heightQuery;
+    query['general_information.dateOfBirth'] = dateQuery;
   }
 
-  // 1d) Exact‐match filters
+  // 5. Add other filters
   for (const [key, value] of Object.entries(otherFilters)) {
     if (value !== undefined && value !== null && value !== '') {
       query[key] = value;
     }
   }
 
-  // 2) Extract pagination & sorting
+  // 6. Pagination & sorting
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper(paginationOptions);
 
@@ -79,18 +119,19 @@ const getALlBioData = async (
     sortCondition[sortBy] = sortOrder;
   }
 
-  // 3) Define projection once
   const projection = {
     _id: 0,
     bioDataNo: 1,
     view: 1,
-    'generalInformation.gender': 1,
-    'generalInformation.dateOfBirth': 1,
-    'generalInformation.height': 1,
-    'generalInformation.skin': 1,
+    'general_information.biodataType': 1,
+    'general_information.dateOfBirth': 1,
+    'general_information.height': 1,
+    'general_information.skin': 1,
+    'general_information.occupation.occupation': 1,
+    'address.permanent_address.full': 1,
+    'address.present_address.full': 1,
   };
 
-  // 4) Run count and find in parallel
   const [totalCount, data] = await Promise.all([
     BioData.countDocuments(query),
     BioData.find(query, projection)

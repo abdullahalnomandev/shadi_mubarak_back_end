@@ -7,7 +7,7 @@ type IGeneralInformation = {
   weight: string;
   skin: string;
   nationality: string;
-  maritalStatus: 'Single' | 'Married' | 'Divorced' | 'Widowed';
+  maritalStatus: 'single' | 'married' | 'divorced' | 'widowed';
 };
 
 type IAddress = {
@@ -29,9 +29,9 @@ type FamilyInformation = {
   fatherProfession?: string;
   isMotherAlive: boolean;
   motherProfession?: string;
-  howManyBrothers: number;
+  howManyBrothers: string;
   brothersInformation?: string;
-  howManySisters: number;
+  howManySisters: string;
   sistersInformation?: string;
   professionOfUncles?: string;
   familyFinancialStatus: string;
@@ -125,6 +125,7 @@ type GroupOption = string; // "science", "commerce", "arts", "vocational", etc.
 
 interface EducationalQualifications {
   education_system: EducationSystem;
+  additional_qualifications: string;
   highest_qualification: HighestQualification;
 
   // SSC / Dakhil / Equivalent
@@ -150,6 +151,7 @@ interface EducationalQualifications {
   graduation_subject?: string;
   graduation_institution?: string;
   graduation_year?: number;
+  graduation_current_study_year?: string; // Only if ongoing
 
   // Post Graduation
   postgraduation_subject?: string;

@@ -27,6 +27,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
       type: {
         // System and Qualification
         education_system: { type: String },
+        additional_qualifications: { type: String },
         highest_qualification: { type: String },
 
         // SSC / Dakhil / Equivalent
@@ -52,6 +53,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
         graduation_subject: { type: String },
         graduation_institution: { type: String },
         graduation_year: { type: Number },
+        graduation_current_study_year: { type: String }, // Only if ongoing
 
         // Post Graduation
         postgraduation_subject: { type: String },
@@ -205,13 +207,11 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
         isMotherAlive: String,
         motherProfession: String,
         howManyBrothers: {
-          type: Number,
-          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          type: String,
         },
         brothersInformation: String,
         howManySisters: {
-          type: Number,
-          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+          type: String,
         },
         sistersInformation: String,
         professionOfUncles: String,
@@ -234,7 +234,7 @@ const BioDataSchema = new Schema<IBiodata, BioDataModel>(
     occupation: {
       type: {
         occupation: { type: String, required: true },
-        monthlyIncome: Number,
+        monthlyIncome: String,
         descriptionOfProfession: { type: String, required: true },
       },
       required: false,
