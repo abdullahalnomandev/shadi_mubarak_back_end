@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "D:\\Biyer Thikana\\biyer-thikana-backend\\logs\\winston\\errors\\.7d472944aac28e65b5421003a2f1d9957cdbce2f-audit.json",
+    "files": [
+        {
+            "date": 1754786091120,
+            "name": "D:\\Biyer Thikana\\biyer-thikana-backend\\logs\\winston\\errors\\shadi-mubarak-2025-10-08-06-error.log",
+            "hash": "c5b8889bf03b8606a8a49b4b2a1798ded866976eb090f25b0d1c861e74ab3d55"
+        },
+        {
+            "date": 1754845020379,
+            "name": "D:\\Biyer Thikana\\biyer-thikana-backend\\logs\\winston\\errors\\shadi-mubarak-2025-10-08-22-error.log",
+            "hash": "4daf7680e405e683f26c87e951ec80ceb5fe5bb6e752c75328efc0914843d4b2"
+        },
+        {
+            "date": 1754948721738,
+            "name": "D:\\Biyer Thikana\\biyer-thikana-backend\\logs\\winston\\errors\\shadi-mubarak-2025-12-08-03-error.log",
+            "hash": "6ef8d903732c0c0c631af703a359607ad885c560d635253793da47fdd0bd2119"
+        }
+    ],
+    "hashType": "sha256"
+}
