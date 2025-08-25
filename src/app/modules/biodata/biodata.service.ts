@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SortOrder } from 'mongoose';
 import { paginationHelper } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -18,15 +17,10 @@ const getALlBioData = async (
     minAge,
     maxAge,
     bioDataNo,
-    presentAddress: rawPresentAddress,
-    permanentAddress: rawPermanentAddress,
+    presentAddress,
+    permanentAddress,
     ...otherFilters
   } = filters;
-
-  const presentAddress = rawPresentAddress === 'all' ? '' : rawPresentAddress;
-  const permanentAddress =
-    rawPermanentAddress === 'all' ? '' : rawPermanentAddress;
-  console.log({ presentAddress, permanentAddress });
 
   const query: Record<string, unknown> = {};
 
@@ -105,7 +99,7 @@ const getALlBioData = async (
 
   // 5. Add other filters
   for (const [key, value] of Object.entries(otherFilters)) {
-    if (value !== undefined && value !== null && value !== '') {
+    if (value !== undefined && value !== null && value !== 0) {
       query[key] = value;
     }
   }
@@ -127,7 +121,7 @@ const getALlBioData = async (
     'general_information.dateOfBirth': 1,
     'general_information.height': 1,
     'general_information.skin': 1,
-    'general_information.occupation.occupation': 1,
+    'occupation.occupation': 1,
     'address.permanent_address.full': 1,
     'address.present_address.full': 1,
   };

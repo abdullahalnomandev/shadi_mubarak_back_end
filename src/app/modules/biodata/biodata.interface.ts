@@ -193,18 +193,22 @@ export type IBiodata = {
   general_information?: IGeneralInformation;
   marriage_related_information?: MarriageRelatedInformation;
   address?: IAddress;
-  personal_information: PersonalInformation;
-  family_information: FamilyInformation;
+  personal_information?: PersonalInformation;
+  family_information?: FamilyInformation;
   occupation?: Occupation;
   expected_partner?: ExpectedPartner;
   agreement?: Agreement;
   contact?: Contact;
+  
 };
 
 export type BioDataModel = Model<IBiodata, Record<string, unknown>>;
 
 export type IBioDataFilters = {
   searchTerm?: string;
+  bioDataNo?: string;
+  presentAddress?: string;
+  permanentAddress?: string;
   minAge?: number;
   maxAge?: number;
   minHeight?: number;
