@@ -57,7 +57,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   }
 
   // Extract user data for token generation
-  const { _id, bioDataNo, role } = user;
+  const { id: _id, bioDataNo, role } = user;
   const tokenPayload = {
     id: _id,
     bioDataNo,
@@ -347,8 +347,10 @@ const changePassword = async (
     );
   }
 
-  isUserExist.password = newPassword;
-  isUserExist.save();
+  if (isUserExist) {
+    isUserExist.password = newPassword;
+    await isUserExist.save();
+  }
 };
 
 const forgetPassword = async (email: string): Promise<void> => {

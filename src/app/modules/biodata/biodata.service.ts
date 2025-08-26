@@ -271,11 +271,11 @@ const updateProfile = async (
     { $set: payload },
     { new: true }
   );
-  return result?.profileStatus;
+  return result;
 };
 
 const deleteBioData = async (bioDataNo: string): Promise<IBiodata | null> => {
-  const resetPayload: Partial<IBiodata> = {
+  const resetPayload: Partial<any> = {
     profileStatus: 'not_started',
     completedSteps: [],
     view: 0,

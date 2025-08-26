@@ -68,7 +68,7 @@ const getDetailsByStep = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
-  const { bioDataNo } = req.user;
+  const { bioDataNo } = req.user as any;
   const payload = req.body;
   const result = await BioDataService.updateProfile(bioDataNo, payload);
   sendResponse<IBiodata>(res, {
@@ -80,7 +80,7 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteBioData = catchAsync(async (req: Request, res: Response) => {
-  const { bioDataNo } = req.user;
+  const { bioDataNo } = req.user as any;
   const result = await BioDataService.deleteBioData(bioDataNo);
   sendResponse<IBiodata>(res, {
     statusCode: httpStatus.OK,
