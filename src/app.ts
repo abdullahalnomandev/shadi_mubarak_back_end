@@ -9,7 +9,7 @@ const app: Application = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: ['http://localhost:3000','https://shadi-mubarak-front-end.vercel.app'],
     credentials: true,
   })
 );
