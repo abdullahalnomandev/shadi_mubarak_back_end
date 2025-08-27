@@ -57,9 +57,9 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   }
 
   // Extract user data for token generation
-  const { id: _id, bioDataNo, role } = user;
+  const { bioDataNo, role } = user;
   const tokenPayload = {
-    id: _id,
+    id: user._id,
     bioDataNo,
     userEmail,
     role,

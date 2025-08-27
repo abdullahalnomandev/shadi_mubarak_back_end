@@ -6,6 +6,8 @@ export type ILoginUser = {
 };
 
 export type ICreateUser = {
+  id?:string;
+  _id?:string;
   email: string;
   password: string;
   phone: string;

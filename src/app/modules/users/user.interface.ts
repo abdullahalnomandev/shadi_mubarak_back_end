@@ -32,7 +32,7 @@ export type UserModel = {
   ): Promise<
     Pick<
       IUser,
-      'id' | 'email' | 'password' | 'role' | 'bioDataNo' | 'emailVerified'
+      '_id' | 'email' | 'password' | 'role' | 'bioDataNo' | 'emailVerified'
     >
   >;
   isPasswordMatch(
